@@ -49,10 +49,10 @@ case "$action" in
 	provides)
 		qfile -Cv "$@"
 		;;
-	verify)
+	check)
 		qcheck "$@"
 		;;
-	verifyall)
+	checkall)
 		qcheck
 		;;
 	# random commands
@@ -88,8 +88,8 @@ case "$action" in
 			    listfiles - List the files belonging to a package [qlist package]
 			    listinstalled - List installed packages [qlist -ICv package]
 			    provides - List the installed package(s) which own the indicated file [qfile file]
-			    verify - Verify a package's installed files match the checksum and timestamp they had when first installed [qcheck package]
-			    verifyall - Same as above, but against all installed packages [qcheck]
+			    check - Check a package's installed files match the checksum and timestamp they had when first installed [qcheck package]
+			    checkall - Same as above, but against all installed packages [qcheck]
 			    sysinfo - Display information about installed core packages and portage configuration [emerge --info]
 
 			You can pass arbitrary parameters to us after the command you want, and we'll
