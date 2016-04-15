@@ -28,10 +28,10 @@ case "$action" in
 		emerge --unmerge -av "$@"
 		;;
 	# info commands
-	listfiles)
+	list)
 		qlist "$@"
 		;;
-	listinstalled)
+	listall)
 		qlist -ICv "$@"
 		;;
 	provides)
@@ -44,12 +44,6 @@ case "$action" in
 		qcheck
 		;;
 	# random commands
-	moo)
-		emerge --moo
-		;;
-	machinegod)
-		echo "Only the zmedico can fix your machine god."
-		;;
 	sysinfo)
 		emerge --info "$@"
 		;;
@@ -71,8 +65,8 @@ case "$action" in
 			    search - Search for packages [eix package]
 			    autoremove - Remove packages that are no longer needed [emerge --depclean -a]
 			    forceremove - *Unsafely* remove packages [emerge --unmerge -av package(s)]
-			    listfiles - List the files belonging to a package [qlist package]
-			    listinstalled - List installed packages [qlist -ICv package]
+			    list - List the files belonging to a package [qlist package]
+			    listall - List ALL installed packages [qlist -ICv package]
 			    provides - List the installed package(s) which own the indicated file [qfile file]
 			    check - Check a package's installed files match the checksum and timestamp they had when first installed [qcheck package]
 			    checkall - Same as above, but against all installed packages [qcheck]
