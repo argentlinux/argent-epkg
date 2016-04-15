@@ -78,7 +78,7 @@ case "$action" in
 			Commands [equivalent Gentoo command]:
 			    install - Install new packages [emerge -av package(s)]
 			    remove - Remove packages safely [emerge --depclean -av packages(s)]
-			    update - Retrieve updated portage tree [eix-sync]
+			    update - Retrieve updated kogaion portage configs [kogaionsync]
 			    upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
 			    search - Search for packages [eix package]
 			    autoremove - Remove packages that are no longer needed [emerge --depclean -a]
