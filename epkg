@@ -24,18 +24,6 @@ case "$action" in
 	autoremove)
 		emerge --depclean -a "$@"
 		;;
-	autoclean)
-		# Keep fetch-restricted distfiles, because refetching is painful
-		eclean-dist -df "$@"
-		;;
-	clean)
-		DISTDIR=$(portageq distdir)
-		read -n 1 -p "Are you sure you'd like to remove ALL files and folders within ${DISTDIR}? [yN] "
-		echo;
-		if [ "$REPLY" = 'y' -o "$REPLY" = 'Y' ]; then
-			rm -rf $DISTDIR/* "$@"
-		fi
-		;;
 	forceremove)
 		emerge --unmerge -av "$@"
 		;;
@@ -82,8 +70,6 @@ case "$action" in
 			    upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
 			    search - Search for packages [eix package]
 			    autoremove - Remove packages that are no longer needed [emerge --depclean -a]
-			    autoclean - Remove sources for packages no longer installed [eclean-dist -df]
-			    clean - Remove *ALL* package sources [rm -rf $DISTDIR/*]
 			    forceremove - *Unsafely* remove packages [emerge --unmerge -av package(s)]
 			    listfiles - List the files belonging to a package [qlist package]
 			    listinstalled - List installed packages [qlist -ICv package]
