@@ -5,19 +5,19 @@ shift
 
 case "$action" in
 	# "Standard" action commands, used regularly
-	search | -s)
+	search)
 		emerge -s "$@"
 		;;
-	install | -i)
+	install)
 		emerge -av "$@"
 		;;
-	remove | uninstall | -r)
+	remove)
 		emerge --depclean -av "$@"
 		;;
 	update)
 		kogaionsync
 		;;
-	upgrade | dist-upgrade)
+	upgrade)
 		# Make it portage 2.1-safe and make sure it catches EVERYTHING.
 		emerge -uDvaN --with-bdeps=y @system world "$@"
 		;;
