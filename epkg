@@ -5,27 +5,33 @@ shift
 
 case "$action" in
 	# "Standard" action commands, used regularly
-	search)
-		emerge -s "$@"
-		;;
 	install)
 		emerge -av "$@"
 		;;
 	remove)
 		emerge --depclean -av "$@"
 		;;
+	forceremove)
+		emerge --unmerge -av "$@"
+		;;
+	autoremove)
+		emerge --depclean -a "$@"
+		;;
+	search)
+		emerge -s "$@"
+		;;
 	update)
 		kogaionsync
 		;;
 	upgrade)
 		# Make it portage 2.1-safe and make sure it catches EVERYTHING.
-		emerge -uDvaN --with-bdeps=y @system world "$@"
+		emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
-	autoremove)
-		emerge --depclean -a "$@"
+	clean)
+		eclean -d packages
 		;;
-	forceremove)
-		emerge --unmerge -av "$@"
+	cleanall)
+		rm -rf "/usr/portage/packages/"
 		;;
 	# info commands
 	list)
@@ -34,14 +40,14 @@ case "$action" in
 	listall)
 		qlist -ICv "$@"
 		;;
-	provides)
-		qfile -Cv "$@"
-		;;
 	check)
 		qcheck "$@"
 		;;
 	checkall)
 		qcheck
+		;;
+	provides)
+		qfile -Cv "$@"
 		;;
 	# random commands
 	sysinfo)
@@ -58,26 +64,21 @@ case "$action" in
 			Debian/RedHat-based systems to Gentoo.
 
 			Commands [equivalent Gentoo command]:
-			    install - Install new packages [emerge -av package(s)]
-			    remove - Remove packages safely [emerge --depclean -av packages(s)]
-			    update - Retrieve updated kogaion portage configs [kogaionsync]
-			    upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
-			    search - Search for packages [eix package]
-			    autoremove - Remove packages that are no longer needed [emerge --depclean -a]
-			    forceremove - *Unsafely* remove packages [emerge --unmerge -av package(s)]
-			    list - List the files belonging to a package [qlist package]
-			    listall - List ALL installed packages [qlist -ICv package]
-			    provides - List the installed package(s) which own the indicated file [qfile file]
-			    check - Check a package's installed files match the checksum and timestamp they had when first installed [qcheck package]
-			    checkall - Same as above, but against all installed packages [qcheck]
-			    sysinfo - Display information about installed core packages and portage configuration [emerge --info]
-
-			You can pass arbitrary parameters to us after the command you want, and we'll
-			forward them on to the underlying command.
-
-			See epkg(1), emerge(1), equery(1), eix(1), and eclean(1) for more information.
-
-			We immediately bought some hats so we'd blend in.
+				install - Install new packages [emerge -av package(s)]
+				remove - Remove packages safely [emerge --depclean -av packages(s)]
+				forceremove - *Unsafely* remove packages [emerge --unmerge -av package(s)]
+				autoremove - Remove packages that are no longer needed [emerge --depclean -a]
+				search - Search for packages [eix package]
+				update - Retrieve updated kogaion portage configs [kogaionsync]
+				upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
+				clean - Remove old binary packages from packages dir [eclean -d packages]
+				cleanall - Remove all binary packages from packages dir [rm -rf /usr/portage/packages]
+				list - List the files belonging to a package [qlist package]
+				listall - List ALL installed packages [qlist -ICv package]
+				check - Check a package's installed files match the checksum and timestamp they had when first installed [qcheck package]
+				checkall - Same as above, but against all installed packages [qcheck]
+				provides - List the installed package(s) which own the indicated file [qfile file]
+				sysinfo - Display information about installed core packages and portage configuration [emerge --info]
 		EOH
 		;;
 esac
