@@ -10,25 +10,27 @@ checkroot () {
 }
 
 fetch_portage_tree() {
-	cd /usr/portage && git init
-	git remote add origin git://anongit.gentoo.org/repo/gentoo.git
-	git config core.sparsecheckout true
-	echo "profiles/*" >> .git/info/sparse-checkout
-	echo "metadata/*" >> .git/info/sparse-checkout
-	echo "eclass/*" >> .git/info/sparse-checkout
-	echo ".gitignore" >> .git/info/sparse-checkout
-	git pull --depth=1 origin master
-	git branch -u origin/master master
-}
-
-fetch_kogaion_overlay() {
-	layman -f -a kogaion-desktop -o https://gitlab.com/kogaion/kogaion-desktop/raw/master/overlay.xml
+	if [[ ! -d /usr/portage/.git ]] ; then
+		echo -e "########################################################"
+		echo -e "# epkg firstrun detected, configuring system profile...#"
+		echo -e "#   this will take less than a minute, please wait...  #"
+		echo -e "########################################################"
+		cd /usr/portage && git init > /dev/null 2>&1
+		git remote add origin git://anongit.gentoo.org/repo/gentoo.git
+		git config core.sparsecheckout true
+		echo "profiles/*" >> .git/info/sparse-checkout
+		echo "metadata/*" >> .git/info/sparse-checkout
+		echo "eclass/*" >> .git/info/sparse-checkout
+		echo ".gitignore" >> .git/info/sparse-checkout
+		git pull --depth=1 origin master > /dev/null 2>&1
+		git branch -u origin/master master > /dev/null 2>&1
+		rm -rf /usr/portage/profiles/updates > /dev/null 2>&1
+	fi
 }
 
 main() {
 	if checkroot; then
 		fetch_portage_tree
-		fetch_kogaion_overlay
 	fi
 }
 
