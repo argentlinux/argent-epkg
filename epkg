@@ -4,7 +4,7 @@
 # since portage tree is out of squashfs, it wont be available in the iso image as well
 # epkg will fail miserably because portage profiles are no longer available and not set
 # source kogaion user mode by default to get portage profiles so epkg will work flawless
-source /usr/lib/epkg/kogaionuser 
+source /usr/lib64/epkg/kogaionuser 
 #####
 action=$1
 shift
