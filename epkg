@@ -26,7 +26,7 @@ case "$action" in
 		emerge -s "$@"
 		;;
 	update)
-		kogaionsync
+		/usr/lib64/epkg/kogaionsync
 		;;
 	upgrade)
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
@@ -35,7 +35,7 @@ case "$action" in
 		eclean -d packages
 		;;
 	cleanall)
-		rm -rf "/usr/portage/packages/*"
+		rm -rf /usr/portage/packages
 		;;
 	list)
 		qlist "$@"
