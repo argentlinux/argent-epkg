@@ -62,7 +62,7 @@ case "$action" in
 				remove - Remove packages safely [emerge --depclean -av packages(s)]
 				forceremove - *Unsafely* remove packages [emerge --unmerge -av package(s)]
 				autoremove - Remove packages that are no longer needed [emerge --depclean -a]
-				search - Search for packages [eix package]
+				search - Search for packages [emerge -s package]
 				update - Retrieve updated kogaion portage configs [kogaionsync]
 				upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
 				clean - Remove old binary packages from packages dir [eclean -d packages]
