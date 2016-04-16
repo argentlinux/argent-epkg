@@ -29,7 +29,7 @@ case "$action" in
 		eclean -d packages
 		;;
 	cleanall)
-		rm -rf "/usr/portage/packages/"
+		rm -rf "/usr/portage/packages/*"
 		;;
 	list)
 		qlist "$@"
@@ -53,7 +53,7 @@ case "$action" in
 		cat <<-"EOH"
 			Usage: epkg command [package(s)]
 
-			epkg is a simple wrapper around portage, gentoolkit, and eix that provides an
+			epkg is a simple wrapper around portage, gentoolkit, and portage-utils that provides an
 			apt-get/yum-alike interface to these commands, to assist people transitioning from
 			Debian/RedHat-based systems to Gentoo.
 
@@ -66,7 +66,7 @@ case "$action" in
 				update - Retrieve updated kogaion portage configs [kogaionsync]
 				upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
 				clean - Remove old binary packages from packages dir [eclean -d packages]
-				cleanall - Remove all binary packages from packages dir [rm -rf /usr/portage/packages]
+				cleanall - Remove all binary packages from packages dir [rm -rf /usr/portage/packages/*]
 				list - List the files belonging to a package [qlist package]
 				listall - List ALL installed packages [qlist -ICv package]
 				check - Check a packages installed files match the checksum and timestamp they had when first installed [qcheck package]
