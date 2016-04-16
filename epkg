@@ -4,7 +4,7 @@
 # since portage tree is out of squashfs, it wont be available in the iso image as well
 # epkg will fail miserably because portage profiles are no longer available and not set
 # source kogaion user mode by default to get portage profiles so epkg will work flawless
-source /usr/lib64/epkg/kogaionuser 
+source /usr/share/epkg/kogaionuser 
 #####
 action=$1
 shift
@@ -26,7 +26,7 @@ case "$action" in
 		emerge -s "$@"
 		;;
 	update)
-		/usr/lib64/epkg/kogaionsync
+		/usr/share/epkg/kogaionsync
 		;;
 	upgrade)
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
