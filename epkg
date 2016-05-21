@@ -19,10 +19,8 @@ case "$action" in
 	search)
 		emerge -s "$@"
 		;;
-	update)
-		/usr/share/epkg/kogaionsync
-		;;
 	upgrade)
+		source /usr/share/epkg/kogaionsync
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
 	clean)
@@ -58,21 +56,20 @@ case "$action" in
 			Debian/RedHat-based systems to Gentoo.
 
 			Commands [equivalent Gentoo command]:
-				install - Install new packages [emerge -av package(s)]
-				remove - Remove packages safely [emerge --depclean -av packages(s)]
-				forceremove - *Unsafely* remove packages [emerge --unmerge -av package(s)]
-				autoremove - Remove packages that are no longer needed [emerge --depclean -a]
-				search - Search for packages [emerge -s package]
-				update - Retrieve updated kogaion portage configs [kogaionsync]
-				upgrade - Update installed packages [emerge -NDuav --with-bdeps=y @system world]
-				clean - Remove old binary packages from packages dir [eclean -d packages]
-				cleanall - Remove all binary packages from packages dir [rm -rf /usr/portage/packages/*]
-				list - List the files belonging to a package [qlist package]
-				listall - List ALL installed packages [qlist -ICv package]
-				check - Check a packages installed files match the checksum and timestamp they had when first installed [qcheck package]
-				checkall - Same as above, but against all installed packages [qcheck]
-				provides - List the installed package(s) which own the indicated file [qfile file]
-				sysinfo - Display information about installed core packages and portage configuration [emerge --info]
+				install - Install new packages
+				remove - Remove packages safely
+				forceremove - *Unsafely* remove packages
+				autoremove - Remove packages that are no longer needed
+				search - Search for packages
+				upgrade - resync portage configs && upgrade installed packages
+				clean - Remove old binary packages from packages dir
+				cleanall - Remove all binary packages from packages dir
+				list - List the files belonging to a package
+				listall - List ALL installed packages
+				check - Check a packages installed files match the checksum and timestamp they had when first installed
+				checkall - Same as above, but against all installed packages
+				provides - List the installed package(s) which own the indicated file
+				sysinfo - Display information about installed core packages and portage configuration
 		EOH
 		;;
 esac
