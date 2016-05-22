@@ -19,6 +19,9 @@ case "$action" in
 	search)
 		emerge -s "$@"
 		;;
+	update)
+		source /usr/share/epkg/kogaionsync
+		;;
 	upgrade)
 		source /usr/share/epkg/kogaionsync
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
@@ -61,6 +64,7 @@ case "$action" in
 				forceremove - *Unsafely* remove packages
 				autoremove - Remove packages that are no longer needed
 				search - Search for packages
+				update - resync portage configs
 				upgrade - resync portage configs && upgrade installed packages
 				clean - Remove old binary packages from packages dir
 				cleanall - Remove all binary packages from packages dir
