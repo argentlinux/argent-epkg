@@ -1,2 +1,22 @@
 #!/usr/bin/env bash
-cd /opt/kogaion-build ; git pull > /dev/null 2>&1 ; cd
+
+checkroot () {
+	if [[ "$(whoami)" != root ]] ; then
+		echo "You must be root to perform this operation!"
+		exit 1
+	fi
+}
+
+sync_portage_config () {
+	pushd /opt/kogaion-build > /dev/null 2>&1
+	git pull > /dev/null 2>&1
+	popd > /dev/null 2>&1
+}
+
+main () {
+	if checkroot ; then
+		sync_portage_config
+	fi
+}
+
+main
