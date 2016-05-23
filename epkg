@@ -5,15 +5,19 @@ shift
 
 case "$action" in
 	install)
+		source /usr/share/epkg/kogaionsync
 		emerge -av "$@"
 		;;
 	remove)
+		source /usr/share/epkg/kogaionsync
 		emerge --depclean -av "$@"
 		;;
 	forceremove)
+		source /usr/share/epkg/kogaionsync
 		emerge --unmerge -av "$@"
 		;;
 	autoremove)
+		source /usr/share/epkg/kogaionsync
 		emerge --depclean -a "$@"
 		;;
 	search)
