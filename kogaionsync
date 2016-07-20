@@ -8,8 +8,12 @@ checkroot () {
 }
 
 sync_portage_config () {
+	echo ""
+	echo "Syncing portage config files, please wait!"
+	echo ""
+	sleep 1
 	pushd /opt/kogaion-build > /dev/null 2>&1
-	git pull > /dev/null 2>&1
+	git pull
 	popd > /dev/null 2>&1
 }
 
