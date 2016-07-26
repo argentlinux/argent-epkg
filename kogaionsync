@@ -8,12 +8,28 @@ checkroot () {
 }
 
 sync_portage_config () {
-	echo ""
-	echo "Syncing portage config files, please wait!"
-	echo ""
-	sleep 1
+	# enter into kogaion portage configuration folder
 	pushd /opt/kogaion-build > /dev/null 2>&1
-	git pull
+	# first update remote branch
+	git remote update > /dev/null 2>&1
+	# get local and remote branch hashes
+	export local localhash=$(git rev-parse @)
+	export local remotehash=$(git rev-parse @{u})
+	# compare local branch hash with remote branch hash
+	# if remote branch has new commits, pull && update local branch
+	# else let us know we're already in sync
+	if [ $localhash = $remotehash ] ; then
+		echo ""
+		echo "Portage config is synced, moving on..."
+		echo ""
+	else
+		echo ""
+		echo "Portage config is not synced, syncing first..."
+		echo ""
+		sleep 1
+		git pull
+	fi
+	# go back to previous cwd
 	popd > /dev/null 2>&1
 }
 
