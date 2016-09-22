@@ -16,7 +16,7 @@ sync_portage_config () {
 	echo ">>> Syncing 'portage config' into '/etc/portage'"
 	sleep 1
 	git pull
-	echo "=== Sync completed for 'portage config'"
+	echo "=== Sync completed for 'portage config'..."
 	popd > /dev/null 2>&1
 }
 
