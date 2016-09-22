@@ -7,34 +7,22 @@ checkroot () {
 	fi
 }
 
+sync_repos_n_overlays () {
+	emerge --sync
+}
+
 sync_portage_config () {
-	# enter into kogaion portage configuration folder
 	pushd /opt/kogaion-build > /dev/null 2>&1
-	# first update remote branch
-	git remote update > /dev/null 2>&1
-	# get local and remote branch hashes
-	export local localhash=$(git rev-parse @)
-	export local remotehash=$(git rev-parse @{u})
-	# compare local branch hash with remote branch hash
-	# if remote branch has new commits, pull && update local branch
-	# else let us know we're already in sync
-	if [ $localhash = $remotehash ] ; then
-		echo ""
-		echo "Portage config is synced, moving on..."
-		echo ""
-	else
-		echo ""
-		echo "Portage config is not synced, syncing first..."
-		echo ""
-		sleep 1
-		git pull
-	fi
-	# go back to previous cwd
+	echo ">>> Syncing 'portage config' into '/etc/portage'"
+	sleep 1
+	git pull
+	echo "=== Sync completed for 'portage config'"
 	popd > /dev/null 2>&1
 }
 
 main () {
 	if checkroot ; then
+		sync_repos_n_overlays
 		sync_portage_config
 	fi
 }
