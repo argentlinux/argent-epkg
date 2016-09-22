@@ -14,7 +14,7 @@ sync_repos_n_overlays () {
 sync_portage_config () {
 	pushd /opt/kogaion-build > /dev/null 2>&1
 	echo ">>> Syncing 'portage config' into '/etc/portage'"
-	sleep 1
+	echo "/usr/bin/git pull"
 	git pull
 	echo "=== Sync completed for 'portage config'..."
 	popd > /dev/null 2>&1
