@@ -5,19 +5,23 @@ shift
 
 case "$action" in
 	install)
-		source /usr/share/epkg/kogaionsync
+		source /usr/share/epkg/checksync
 		emerge -av "$@"
 		;;
+	autoinstall)
+		source /usr/share/epkg/checksync
+		emerge -v "$@"
+		;;
 	remove)
-		source /usr/share/epkg/kogaionsync
+		source /usr/share/epkg/checksync
 		emerge --depclean -av "$@"
 		;;
 	forceremove)
-		source /usr/share/epkg/kogaionsync
+		source /usr/share/epkg/checksync
 		emerge --unmerge -av "$@"
 		;;
 	autoremove)
-		source /usr/share/epkg/kogaionsync
+		source /usr/share/epkg/checksync
 		emerge --depclean -a "$@"
 		;;
 	search)
@@ -27,7 +31,7 @@ case "$action" in
 		source /usr/share/epkg/kogaionsync
 		;;
 	upgrade)
-		source /usr/share/epkg/kogaionsync
+		source /usr/share/epkg/checksync
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
 	clean)
@@ -64,6 +68,7 @@ case "$action" in
 
 			Commands [equivalent Gentoo command]:
 				install - Install new packages
+				autoinstall - Install new packages without confirmation
 				remove - Remove packages safely
 				forceremove - *Unsafely* remove packages
 				autoremove - Remove packages that are no longer needed

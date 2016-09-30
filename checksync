@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+checkroot () {
+	if [[ "$(whoami)" != root ]] ; then
+		echo "You must be root to perform this operation!"
+		exit 1
+	fi
+}
+
+check_portage_config () {
+	pushd /opt/kogaion-build > /dev/null 2>&1
+	git remote update > /dev/null 2>&1
+	export local confhash=$(git rev-parse @)
+	export local rconfhash=$(git rev-parse @{u})
+	if [ $confhash != $rconfhash ] ; then
+		echo "Portage config is out of date, run "epkg update" first"
+		exit 1
+	fi
+	popd > /dev/null 2>&1
+}
+
+check_portage_tree () {
+	pushd /usr/portage > /dev/null 2>&1
+	git remote update > /dev/null 2>&1
+	export local treehash=$(git rev-parse @)
+	export local rtreehash=$(git rev-parse @{u})
+	if [ $treehash != $rtreehash ] ; then
+		echo "Portage tree is out of date, run "epkg update" first"
+		exit 1
+	fi
+	popd > /dev/null 2>&1
+}
+
+check_kogaion_overlay () {
+	pushd /var/lib/layman/kogaion-desktop > /dev/null 2>&1
+	git remote update > /dev/null 2>&1
+	export local overlayhash=$(git rev-parse @)
+	export local roverlayhash=$(git rev-parse @{u})
+	if [  $overlayhash != $roverlayhash ] ; then
+		echo "Kogaion overlay is out of date, run "epkg update" first"
+		exit 1
+	fi
+}
+
+main () {
+	if checkroot ; then
+		check_portage_tree
+		check_kogaion_overlay
+		check_portage_config
+	fi
+}
+
+main
