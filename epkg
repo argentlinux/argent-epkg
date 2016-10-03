@@ -28,7 +28,7 @@ case "$action" in
 		emerge -s "$@"
 		;;
 	update)
-		source /usr/share/epkg/kogaionsync
+		source /usr/share/epkg/argentsync
 		;;
 	upgrade)
 		source /usr/share/epkg/checksync
