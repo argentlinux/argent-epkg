@@ -9,51 +9,46 @@ case "$action" in
 		emerge -av "$@"
 		;;
 	autoinstall)
-		source /usr/share/epkg/checksync
+		source /usr/share/epkg/argentsync
 		emerge -v "$@"
 		;;
 	remove)
 		source /usr/share/epkg/checksync
 		emerge --depclean -av "$@"
 		;;
+	autoremove)
+		source /usr/share/epkg/argentsync
+		emerge --depclean -v "$@"
+		;;
 	forceremove)
 		source /usr/share/epkg/checksync
 		emerge --unmerge -av "$@"
 		;;
-	autoremove)
+	autoforceremove)
+		source /usr/share/epkg/argentsync
+		emerge --unmerge -v "$@"
+		;;
+	clean)
 		source /usr/share/epkg/checksync
-		emerge --depclean -a "$@"
+		emerge --depclean -av "$@"
+		;;
+	autoclean)
+		source /usr/share/epkg/argentsync
+		emerge --depclean -q "$@"
+		;;
+	upgrade)
+		source /usr/share/epkg/checksync
+		emerge -uDvaN --with-bdeps=y @system @world "$@"
+		;;
+	autoupgrade)
+		source /usr/share/epkg/argentsync
+		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	search)
 		emerge -s "$@"
 		;;
 	update)
 		source /usr/share/epkg/argentsync
-		;;
-	upgrade)
-		source /usr/share/epkg/checksync
-		emerge -uDvaN --with-bdeps=y @system @world "$@"
-		;;
-	clean)
-		eclean -d packages
-		;;
-	cleanall)
-		rm -rf /usr/portage/packages
-		;;
-	list)
-		qlist "$@"
-		;;
-	listall)
-		qlist -ICv "$@"
-		;;
-	check)
-		qcheck "$@"
-		;;
-	checkall)
-		qcheck
-		;;
-	provides)
-		qfile -Cv "$@"
 		;;
 	sysinfo)
 		emerge --info "$@"
@@ -66,22 +61,19 @@ case "$action" in
 			apt-get/yum-alike interface to these commands, to assist people transitioning from
 			Debian/RedHat-based systems to Gentoo.
 
-			Commands [equivalent Gentoo command]:
+			Commands :
 				install - Install new packages
-				autoinstall - Install new packages without confirmation
+				autoinstall - Install new packages (no confirmation)
 				remove - Remove packages safely
+				autoremove - Remove packages safely (no confirmation)
 				forceremove - *Unsafely* remove packages
-				autoremove - Remove packages that are no longer needed
+				autoforceremove - *Unsafely* remove packages (no confirmation)
+				clean - Remove packages that are no longer needed
+				autoclean - Remove packages that are no longer needed (no confirmation)
+				upgrade -  Upgrade system
+				autoupgrade - Upgrade system (no confirmation)
 				search - Search for packages
-				update - resync portage configs
-				upgrade - resync portage configs && upgrade installed packages
-				clean - Remove old binary packages from packages dir
-				cleanall - Remove all binary packages from packages dir
-				list - List the files belonging to a package
-				listall - List ALL installed packages
-				check - Check a packages installed files match the checksum and timestamp they had when first installed
-				checkall - Same as above, but against all installed packages
-				provides - List the installed package(s) which own the indicated file
+				update - Resync portage tree, portage config && Kogaion Overlay
 				sysinfo - Display information about installed core packages and portage configuration
 		EOH
 		;;

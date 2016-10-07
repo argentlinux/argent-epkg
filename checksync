@@ -8,7 +8,7 @@ checkroot () {
 }
 
 check_portage_config () {
-	pushd /opt/argentwork-build > /dev/null 2>&1
+	pushd /opt/argentws-build > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
 	export local confhash=$(git rev-parse @)
 	export local rconfhash=$(git rev-parse @{u})
@@ -32,7 +32,7 @@ check_portage_tree () {
 }
 
 check_argent_overlay () {
-	pushd /var/lib/layman/argent-work > /dev/null 2>&1
+	pushd /var/lib/layman/argent-ws > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
 	export local overlayhash=$(git rev-parse @)
 	export local roverlayhash=$(git rev-parse @{u})
