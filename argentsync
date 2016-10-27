@@ -12,7 +12,7 @@ sync_repos_n_overlays () {
 }
 
 sync_portage_config () {
-	pushd /opt/argentwork-build > /dev/null 2>&1
+	pushd /opt/argentws-build > /dev/null 2>&1
 	echo ">>> Syncing 'portage config' into '/etc/portage'..."
 	echo "/usr/bin/git pull"
 	git pull
