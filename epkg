@@ -73,7 +73,7 @@ case "$action" in
 				upgrade -  Upgrade system
 				autoupgrade - Upgrade system (no confirmation)
 				search - Search for packages
-				update - Resync portage tree, portage config && Kogaion Overlay
+				update - Resync portage tree, portage config && Argent WS Overlay
 				sysinfo - Display information about installed core packages and portage configuration
 		EOH
 		;;

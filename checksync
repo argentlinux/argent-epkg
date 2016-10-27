@@ -37,7 +37,7 @@ check_argent_overlay () {
 	export local overlayhash=$(git rev-parse @)
 	export local roverlayhash=$(git rev-parse @{u})
 	if [  $overlayhash != $roverlayhash ] ; then
-		echo "Kogaion overlay is out of date, run "epkg update" first"
+		echo "Argent overlay is out of date, run "epkg update" first"
 		exit 1
 	fi
 }
