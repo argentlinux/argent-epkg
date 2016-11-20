@@ -42,7 +42,7 @@ checkportagetree () {
 }
 
 checkargentoverlay () {
-	pushd /var/lib/layman/argent-desktop > /dev/null 2>&1
+	pushd /var/lib/layman/argent-ws > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
 	export local overlayhash=$(git rev-parse @)
 	export local roverlayhash=$(git rev-parse @{u})
