@@ -1,57 +1,62 @@
 #!/usr/bin/env bash
 
+source /usr/lib/epkg/libepkg
+
+checkroot
+checksystemmode
+
 action=$1
 shift
 
 case "$action" in
 	install)
-		source /usr/share/epkg/checksync
+		checksync
 		emerge -av "$@"
 		;;
-	autoinstall)
-		source /usr/share/epkg/argentsync
-		emerge -v "$@"
-		;;
 	remove)
-		source /usr/share/epkg/checksync
+		checksync
 		emerge --depclean -av "$@"
-		;;
-	autoremove)
-		source /usr/share/epkg/argentsync
-		emerge --depclean -v "$@"
 		;;
 	forceremove)
-		source /usr/share/epkg/checksync
+		checksync
 		emerge --unmerge -av "$@"
 		;;
-	autoforceremove)
-		source /usr/share/epkg/argentsync
-		emerge --unmerge -v "$@"
-		;;
 	clean)
-		source /usr/share/epkg/checksync
-		emerge --depclean -av "$@"
-		;;
-	autoclean)
-		source /usr/share/epkg/argentsync
-		emerge --depclean -q "$@"
+		checksync
+		emerge --depclean -av
 		;;
 	upgrade)
-		source /usr/share/epkg/checksync
+		checksync
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
+	autoinstall)
+		argentsync
+		emerge -v "$@"
+		;;
+	autoremove)
+		argentsync
+		emerge --depclean -v "$@"
+		;;
+	autoforceremove)
+		argentsync
+		emerge --unmerge -v "$@"
+		;;
+	autoclean)
+		argentsync
+		emerge --depclean -q
+		;;
 	autoupgrade)
-		source /usr/share/epkg/argentsync
+		argentsync
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	search)
 		emerge -s "$@"
 		;;
 	update)
-		source /usr/share/epkg/argentsync
+		argentsync
 		;;
 	sysinfo)
-		emerge --info "$@"
+		emerge --info
 		;;
 	*)
 		cat <<-"EOH"
@@ -63,17 +68,17 @@ case "$action" in
 
 			Commands :
 				install - Install new packages
-				autoinstall - Install new packages (no confirmation)
 				remove - Remove packages safely
-				autoremove - Remove packages safely (no confirmation)
 				forceremove - *Unsafely* remove packages
-				autoforceremove - *Unsafely* remove packages (no confirmation)
 				clean - Remove packages that are no longer needed
-				autoclean - Remove packages that are no longer needed (no confirmation)
 				upgrade -  Upgrade system
+				autoinstall - Install new packages (no confirmation)
+				autoremove - Remove packages safely (no confirmation)
+				autoforceremove - *Unsafely* remove packages (no confirmation)
+				autoclean - Remove packages that are no longer needed (no confirmation)
 				autoupgrade - Upgrade system (no confirmation)
 				search - Search for packages
-				update - Resync portage tree, portage config && Argent WS Overlay
+				update - Resync portage tree, portage config && argent-ws overlay
 				sysinfo - Display information about installed core packages and portage configuration
 		EOH
 		;;
