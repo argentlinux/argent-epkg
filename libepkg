@@ -11,18 +11,22 @@ checkroot () {
 }
 
 checksystemmode() {
-	if [[ "$(readlink -f "/etc/portage/make.conf")" = /opt/argentws-build/conf/intel/portage/make.conf.amd64-srcmode ]] ; then
+	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-srcmode" ]] ; then
 		eerror "The system is set to srcmode (full Gentoo mode), cowardly refusing to run!"
 		exit 1
 	fi
 }
 
 checkportageconfig () {
+	# running update on argent specific gentoo settings
+
 	pushd /opt/argentws-build > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
+
 	export local confhash=$(git rev-parse @)
 	export local rconfhash=$(git rev-parse @{u})
-	if [ $confhash != $rconfhash ] ; then
+
+	if [ "${confhash}" != "${rconfhash}" ] ; then
 		eerror "Portage config is out of date, run "epkg update" first"
 		exit 1
 	fi
@@ -30,11 +34,15 @@ checkportageconfig () {
 }
 
 checkportagetree () {
+	# running update on gentoo snapshotted overlay
+
 	pushd /usr/portage > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
+
 	export local treehash=$(git rev-parse @)
 	export local rtreehash=$(git rev-parse @{u})
-	if [ $treehash != $rtreehash ] ; then
+
+	if [ "${treehash}" != "${rtreehash}" ] ; then
 		eerror "Portage tree is out of date, run "epkg update" first"
 		exit 1
 	fi
@@ -42,12 +50,14 @@ checkportagetree () {
 }
 
 checkargentoverlay () {
+	# running update on argent gentoo overlay
+
 	pushd /var/lib/layman/argent-ws > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
 	export local overlayhash=$(git rev-parse @)
 	export local roverlayhash=$(git rev-parse @{u})
-	if [  $overlayhash != $roverlayhash ] ; then
-		eeror "argent-ws overlay is out of date, run "epkg update" first"
+	if [  "${overlayhash}" != "${roverlayhash}" ] ; then
+		eerror "argent-ws overlay is out of date, run "epkg update" first"
 		exit 1
 	fi
 }
@@ -62,12 +72,128 @@ syncrepos () {
 	emerge --sync
 }
 
+backuppkg () {
+	# function to provide backup packages with own configurations
+
+	# a forenote: although if you run usermode or devmode, the installing packages will already be saved
+	# but if you run epkg cleanlocalpkg, you can start all over and save what packages you already configured
+	# like saving apache with own configs for example, for future use
+
+        # the unconventional way here: we import /etc/portage/make.conf into current local function
+
+        if [ -f "/etc/portage/make.conf" ] ; then
+                . /etc/portage/make.conf
+        fi
+
+	if [[ "$@" = "" ]] ; then
+		eerror "You have not specified any package to backup"
+		exit 1
+	fi
+
+	# checking if ${PORTDIR} exists
+	# usually it's /usr/portage if you're on avasile --usermode or --devmode
+
+	if [ -d "${PORTDIR}" ] ; then
+		quickpkg --include-config y --include-unmodified-config y "$@"
+		echo ""
+		echo "All packages were saved in ${PORTDIR}/packages/ by category"
+		echo "Please make sure these files will not be overwritted!"
+		echo "If you consider further backup on the same package"
+		echo "consider copying packages from ${PORTDIR}/packages/ into customized directories"
+		echo "Although, not recommended, you can epkg install them by path ( from customized directories )"
+	else
+		echo ""
+		eerror "No such directory: /usr/portage/"
+		echo "Please consider running: epkg update"
+		exit 1
+	fi
+
+}
+
+cleanoutdated () {
+	# function designed to clearout any outdated package using gentoolkit
+
+	# the unconventional way here: we import /etc/portage/make.conf into current local function
+
+	if [ -f "/etc/portage/make.conf" ] ; then
+		. /etc/portage/make.conf
+	else
+		eerror "You don't have the standard Argent portage configuration"
+		echo "Please consider using avasile to change to one of the modes"
+		echo "avasile --help"
+	fi
+
+	# we have 2 checks here: if usr/portage and usr/portage/packages really exist
+	# we may never know what users do to their portage dirs in Gentoo system 
+
+	if [ -d "${PORTDIR}" ] ; then
+		if [ -d "${PORTDIR}/packages/" ] ; then
+			/usr/bin/eclean-pkg
+		else
+			eerror "No such directory ${PORTDIR}/packages"
+			echo "Please consider: mkdir ${PORTDIR}/packages"
+			echo "chgrp portage ${PORTDIR}/packages"
+			exit 1
+		fi
+	else
+		eerror "No such directory: /usr/portage/"
+		echo "Please consider running: epkg update"
+		exit 1
+	fi
+
+	# regenerating environment here is a must!
+	env-update && source /etc/profile
+}
+
+cleanlocalpkg () {
+        # the unconventional way here: we import /etc/portage/make.conf into current local function
+
+        if [ -f "/etc/portage/make.conf" ] ; then
+                . /etc/portage/make.conf
+        else
+                eerror "You don't have the standard Argent portage configuration"
+                echo "Please consider using avasile to change to one of the modes"
+                echo "avasile --help"
+        fi
+
+        # function to cleanup all local packages in /usr/portage/packages
+        # it also includes deletion of /usr/portage/Packages
+
+        # if we do not have any /usr/portage, there is no reason we should continue
+        if [ -d "${PORTDIR}" ] ; then
+
+                if [ -d "${PORTDIR}/packages/" ] ; then
+
+                        rm -rf "${PORTDIR}"/packages/* || exit 1
+                else
+                        eerror "No such directory ${PORTDIR}/packages/"
+                        echo "Make sure you have this directory"
+                        echo "Also make sure you have the right GID:"
+                        echo "i.e.: chgrp portage ${PORTDIR}/packages"
+			exit 1
+                fi
+        else
+                eerror "You do not have ${PORTDIR} directory"
+                echo "Please, consider running: epkg update"
+		exit 1
+        fi
+
+	# regenerating environment here is a must!
+	env-update && source /etc/profile
+}
+
+
 syncportageconfig () {
+	# syncing with the latest updates on our argent gentoo configs
+
 	pushd /opt/argentws-build > /dev/null 2>&1
-	echo ">>> Syncing 'portage config' into '/etc/portage'..."
-	echo "/usr/bin/git pull"
+	echo ">>> Syncing 'portage config' into '/etc/portage' "
+	echo "GIT pulling latest modifications. Please, stand by"
+
 	git pull
+
 	echo "=== Sync completed for 'portage config'"
+
 	popd > /dev/null 2>&1
 }
 

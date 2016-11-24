@@ -17,6 +17,9 @@ case "$action" in
 		checksync
 		emerge --depclean -av "$@"
 		;;
+	backuppkg)
+		backuppkg "$@"
+		;;
 	forceremove)
 		checksync
 		emerge --unmerge -av "$@"
@@ -24,6 +27,12 @@ case "$action" in
 	clean)
 		checksync
 		emerge --depclean -av
+		;;
+	cleanoutdated)
+		cleanoutdated
+		;;
+	cleanlocalpkg)
+		cleanlocalpkg
 		;;
 	upgrade)
 		checksync
@@ -69,8 +78,11 @@ case "$action" in
 			Commands :
 				install - Install new packages
 				remove - Remove packages safely
+				backuppkg - Backup specific packages with own configurations for later use
 				forceremove - *Unsafely* remove packages
 				clean - Remove packages that are no longer needed
+				cleanoutdated - Remove local saved and outdated packages
+				cleanpkg - Remove all locally saved packages ( including index )
 				upgrade -  Upgrade system
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
