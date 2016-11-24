@@ -83,7 +83,11 @@ backuppkg () {
 
         if [ -e "/etc/portage/make.conf" ] ; then
                 . /etc/portage/make.conf
-        fi
+	else
+		eerror "The file does not match the pattern of environment script"
+		echo "Please consider using avasile to change to one of the modes"
+		echo "avasile --help"
+	fi
 
 	if [[ "$@" = "" ]] ; then
 		eerror "You have not specified any package to backup"
@@ -118,7 +122,7 @@ cleanoutdated () {
 	if [ -e "/etc/portage/make.conf" ] ; then
 		. /etc/portage/make.conf
 	else
-		eerror "You don't have the standard Argent portage configuration"
+		eerror "The file does not match the pattern of environment script"
 		echo "Please consider using avasile to change to one of the modes"
 		echo "avasile --help"
 	fi
@@ -151,7 +155,7 @@ cleanlocalpkg () {
         if [ -e "/etc/portage/make.conf" ] ; then
                 . /etc/portage/make.conf
         else
-                eerror "You don't have the standard Argent portage configuration"
+                eerror "The file does not match the pattern of environment script"
                 echo "Please consider using avasile to change to one of the modes"
                 echo "avasile --help"
         fi
