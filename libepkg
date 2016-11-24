@@ -81,7 +81,7 @@ backuppkg () {
 
         # the unconventional way here: we import /etc/portage/make.conf into current local function
 
-        if [ -f "/etc/portage/make.conf" ] ; then
+        if [ -e "/etc/portage/make.conf" ] ; then
                 . /etc/portage/make.conf
         fi
 
@@ -115,7 +115,7 @@ cleanoutdated () {
 
 	# the unconventional way here: we import /etc/portage/make.conf into current local function
 
-	if [ -f "/etc/portage/make.conf" ] ; then
+	if [ -e "/etc/portage/make.conf" ] ; then
 		. /etc/portage/make.conf
 	else
 		eerror "You don't have the standard Argent portage configuration"
@@ -148,7 +148,7 @@ cleanoutdated () {
 cleanlocalpkg () {
         # the unconventional way here: we import /etc/portage/make.conf into current local function
 
-        if [ -f "/etc/portage/make.conf" ] ; then
+        if [ -e "/etc/portage/make.conf" ] ; then
                 . /etc/portage/make.conf
         else
                 eerror "You don't have the standard Argent portage configuration"
