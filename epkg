@@ -46,6 +46,9 @@ case "$action" in
 		argentsync
 		emerge --depclean -v "$@"
 		;;
+	backupallpkg)
+		backupallpkg
+		;;
         recompilepkg)
 		argentsync
                 recompilepkg "$@"
@@ -55,15 +58,15 @@ case "$action" in
 		cleanoutdated
                 recompileallpkg
                 ;;
+        autorecompilepkg)
+                argentsync
+                cleanoutdated
+                autorecompilepkg "$@"
+                ;;
         autorecompileallpkg)
 		argentsync
                 cleanoutdated
                 autorecompileallpkg
-                ;;
-        autorecompilepkg)
-		argentsync
-		cleanoutdated
-                autorecompilepkg "$@"
                 ;;
 	autoforceremove)
 		argentsync
@@ -108,6 +111,7 @@ case "$action" in
 				upgrade -  Upgrade system
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
+				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompilepkg - Recompile packages with self-defined options ( man portage )
 				recompileallpkg - Recompile and save all the packages locally ( usually in /usr/portage/packages/ )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
