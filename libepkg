@@ -312,7 +312,6 @@ fetchsourcepkg () {
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		eerror "If you continue, you continue on your own risk!"
 		sleep 3
 		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --fetchonly "$@"
 	else
