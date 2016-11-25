@@ -187,6 +187,117 @@ cleanlocalpkg () {
 }
 
 
+recompilepkg () {
+	# function to call a recompile of a package and save it to ${PORTDIR}/packages"
+
+	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue on your own risk!"
+		sleep 3
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va "$@"
+	else
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va "$@"
+	fi
+}
+
+recompileallpkg () {
+	# function to recompile everything on the system and also saving all the recompiled packages. Usually in /usr/portage/packages
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+		eerror "You are not allowed to run in --usermode, we propose using: avasile --devmode or --srcmode for this"
+		exit 1
+	else
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $(qlist -IC)
+		eerror "Warning: if there are packages that are not found, you must run: epkg update"
+		eerror "If the error persists, force remove the package causing the corruption:"
+		eerror "in --devmode: epkg remove <package-name>"
+		eerror "in --srcmode: emerge --unmerge <package-name>"
+		eerror "Then re-run the same command: epkg recompileallpkg"
+	fi
+}
+
+autorecompileallpkg () {
+        # function to recompile everything on the system and also saving all the recompiled packages. Usually in /usr/portage/packages
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+                eerror "You are not allowed to run in --usermode, we propose using: avasile --devmode or --srcmode for this"
+                exit 1
+        else
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $(qlist -IC)
+        fi
+}
+
+autorecompilepkg () {
+
+        # function to call a recompile of a package and save it to ${PORTDIR}/packages"
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+                eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+                eerror "If you continue, you continue on your own risk!"
+                sleep 3
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v "$@"
+        else
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v "$@"
+        fi
+
+}
+
+fetchsourcepkg () {
+	# function to download the source of the program for development / patching purposes
+
+
+	# the unconventional way here: we import /etc/portage/make.conf into current local function
+
+	if [ -e "/etc/portage/make.conf" ] ; then
+		. /etc/portage/make.conf
+        else
+		eerror "The file does not match the pattern of environment script"
+		echo "Please consider using avasile to change to one of the modes"
+		echo "avasile --help"
+	fi
+
+        # check if ${PORTDIR} exists
+
+        if [ ! -d "${PORTDIR}" ] ; then
+                eerror "No such directory: ${PORTDIR}"
+                echo "Consider running: epkg update"
+                exit 1
+        fi
+
+	# check if distfiles exist. Again, we might never know what Gentoo users are up to
+
+	if [ ! -d "${PORTDIR}"/distfiles ] ; then
+		eerror "No such directory: ${PORTDIR}/distfiles"
+		echo "Consider creating the directory with the right ownership:"
+		echo "i.e.: chgrp portage ${PORTDIR}/distfiles"
+		exit 1
+	fi
+
+	# check if ${PORTDIR}/packages exists
+
+	if [ ! -d "${PORTDIR}"/packages ] ; then
+		eerror "No such directory: ${PORTDIR}/packages"
+		echo "Consider creating the directory with the right ownership:"
+		echo "i.e.: chgrp portage ${PORTDIR}/packages"
+		exit 1
+	fi
+
+	# function to warn the regular user that he's doin something wrong
+	# but still do it anyway.
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue on your own risk!"
+		sleep 3
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --fetchonly "$@"	
+	else
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --fetchonly "$@"
+	fi
+
+	# regenerating environment here is a must!
+	env-update && source /etc/profile
+}
+
 syncportageconfig () {
 	# syncing with the latest updates on our argent gentoo configs
 

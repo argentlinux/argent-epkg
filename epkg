@@ -46,6 +46,25 @@ case "$action" in
 		argentsync
 		emerge --depclean -v "$@"
 		;;
+        recompilepkg)
+		argentsync
+                recompilepkg "$@"
+                ;;
+        recompileallpkg)
+		argentsync
+		cleanoutdated
+                recompileallpkg
+                ;;
+        autorecompileallpkg)
+		argentsync
+                cleanoutdated
+                autorecompileallpkg
+                ;;
+        autorecompilepkg)
+		argentsync
+		cleanoutdated
+                autorecompilepkg "$@"
+                ;;
 	autoforceremove)
 		argentsync
 		emerge --unmerge -v "$@"
@@ -57,6 +76,9 @@ case "$action" in
 	autoupgrade)
 		argentsync
 		emerge -uDvN --with-bdeps=y @system @world "$@"
+		;;
+	fetchsourcepkg)
+		fetchsourcepkg "$@"
 		;;
 	search)
 		emerge -s "$@"
@@ -86,9 +108,14 @@ case "$action" in
 				upgrade -  Upgrade system
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
+				recompilepkg - Recompile packages with self-defined options ( man portage )
+				recompileallpkg - Recompile and save all the packages locally ( usually in /usr/portage/packages/ )
+				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
+				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autoupgrade - Upgrade system (no confirmation)
+				fetchsourcepkg - Downloads the source of the program. Usually in /usr/portage/distfiles/
 				search - Search for packages
 				update - Resync portage tree, portage config && argent-ws overlay
 				sysinfo - Display information about installed core packages and portage configuration
