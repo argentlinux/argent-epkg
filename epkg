@@ -107,7 +107,7 @@ case "$action" in
 				forceremove - *Unsafely* remove packages
 				clean - Remove packages that are no longer needed
 				cleanoutdated - Remove local saved and outdated packages
-				cleanpkg - Remove all locally saved packages ( including index )
+				cleanpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages.
 				upgrade -  Upgrade system
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
