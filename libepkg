@@ -117,6 +117,10 @@ checksync () {
 }
 
 syncrepos () {
+	if [[ -e "/etc/portage/repos.conf/layman.conf" ]] && [[ "$(cat /etc/portage/repos.conf/layman.conf | grep argent-ws )" ]] ; then
+		sed -i 's|auto-sync = No|auto-sync = yes|g' /etc/portage/repos.conf/layman.conf
+	fi
+
 	emerge --sync
 }
 
