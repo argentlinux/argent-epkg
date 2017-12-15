@@ -173,7 +173,7 @@ backupallpkg () {
 	eerror "Warning: If you backup everything, make sure you keep the packages safe :)"
 	eerror "We cannot take responsibility of safe-guarding the newly backup-ed up system"
 
-        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
                 eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
                 eerror "If you continue, you continue on your own risk!"
 		eerror "Make sure you keep the backup safe!"
@@ -251,7 +251,7 @@ cleanlocalpkg () {
 recompilepkg () {
 	# function to call a recompile of a package and save it to ${PORTDIR}/packages"
 
-	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
 		eerror "If you continue, you continue on your own risk!"
 		sleep 3
@@ -264,7 +264,7 @@ recompilepkg () {
 recompileallpkg () {
 	# function to recompile everything on the system and also saving all the recompiled packages. Usually in /usr/portage/packages
 
-        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are not allowed to run in --usermode, we propose using: avasile --devmode or --srcmode for this"
 		exit 1
 	else
@@ -281,7 +281,7 @@ autorecompilepkg () {
 
         # function to call a recompile of a package and save it to ${PORTDIR}/packages"
 
-        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
                 eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
                 eerror "If you continue, you continue on your own risk!"
                 sleep 3
@@ -295,7 +295,7 @@ autorecompilepkg () {
 autorecompileallpkg () {
         # function to recompile everything on the system and also saving all the recompiled packages. Usually in /usr/portage/packages
 
-        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
                 eerror "You are not allowed to run in --usermode, we propose using: avasile --devmode or --srcmode for this"
                 exit 1
         else
@@ -314,7 +314,7 @@ fetchsourcepkg () {
 	# function to warn the regular user that he's doin something wrong
 	# but still do it anyway.
 
-        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-usermode" ]] ; then
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
 		sleep 3
 		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --fetchonly "$@"
@@ -324,6 +324,69 @@ fetchsourcepkg () {
 
 	# regenerating environment here is a must!
 	env-update && source /etc/profile
+}
+
+fetchbinpkg () {
+        # function to download the source of the program for development / patching purposes
+
+
+        # the unconventional way here: we import /etc/portage/make.conf into current local function
+
+        checkportdir
+
+        # function to warn the regular user that he's doin something wrong
+        # but still do it anyway.
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "Fetching binary package(s) from remote"
+                sleep 2
+                EMERGE_DEFAULT_OPTS="--getbinpkgonly --rebuilt-binaries" emerge --fetchonly "$@"
+        else
+                EMERGE_DEFAULT_OPTS="--getbinpkgonly --rebuilt-binaries" emerge --fetchonly "$@"
+        fi
+
+        # regenerating environment here is a must!
+        env-update && source /etc/profile
+}
+
+buildpkgonly () {
+	# function to only build 1 or more packages based on input
+
+	# should work as: epkg buildpkg-only <something>
+
+	checkportdir
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You cannot run buildpkgonly from the user profile!"
+                exit 1
+        else
+                EMERGE_DEFAULT_OPTS="--getbinpkgonly --rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
+        fi
+
+        # regenerating environment here is a must!
+        env-update && source /etc/profile
+
+
+}
+
+autobuildpkgonly () {
+        # function to only build 1 or more packages based on input
+
+        # should work as: epkg buildpkg-only <something>
+
+        checkportdir
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You cannot run buildpkgonly from the user profile!"
+                exit 1
+        else
+                EMERGE_DEFAULT_OPTS="--getbinpkgonly --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
+        fi
+
+        # regenerating environment here is a must!
+        env-update && source /etc/profile
+
+
 }
 
 syncportageconfig () {
