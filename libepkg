@@ -348,6 +348,15 @@ fetchbinpkg () {
         env-update && source /etc/profile
 }
 
+remove-orphans () {
+	# The function calls 'emerge --depclean -a' which removes orphaned packages
+	# Probably the most successful emerge algorythm ever made
+	checkmakeconf
+
+	emerge --depclean -a
+
+}
+
 buildpkgonly () {
 	# function to only build 1 or more packages based on input
 
@@ -384,8 +393,6 @@ autobuildpkgonly () {
 
         # regenerating environment here is a must!
         env-update && source /etc/profile
-
-
 }
 
 syncportageconfig () {

@@ -88,6 +88,9 @@ case "$action" in
 		argentsync
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
+	remove-orphans)
+		remove-orphans
+		;;
 	fetchsourcepkg)
 		fetchsourcepkg "$@"
 		;;
@@ -135,6 +138,7 @@ case "$action" in
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )
 
+				remove-orphans - Remove orphaned packages ( with confirmation )
 				fetchbinpkg - Downloads only binaries from remote
 				fetchsourcepkg - Downloads the source of the program. Usually in /usr/portage/distfiles/
 				search - Search for packages
