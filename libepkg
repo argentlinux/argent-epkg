@@ -247,7 +247,6 @@ cleanlocalpkg () {
 	env-update && source /etc/profile
 }
 
-
 recompilepkg () {
 	# function to call a recompile of a package and save it to ${PORTDIR}/packages"
 
