@@ -68,6 +68,12 @@ case "$action" in
 	buildpkgonly)
 		buildpkgonly "$@"
 		;;
+	buildinstall)
+		buildinstall
+		;;
+	autobuildinstall)
+		autobuildinstall
+		;;
         autorecompilepkg)
                 argentsync
                 cleanoutdated
@@ -139,6 +145,7 @@ case "$action" in
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
 				buildpkgonly - Build/Recompile package(s) and export them locally ( usually in /usr/portage/packages )
+				buildinstall - Recompile/Build package(s) and install them after ( usually in /usr/portage/packges )
 
 				autoupgrade - Upgrade system (no confirmation)
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
@@ -146,6 +153,7 @@ case "$action" in
 				autoforceremove - *Unsafely* remove packages (no confirmation)
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )
+				autobuildinstall - Build/Recompile package(s) and autoinstall them after ( no confirmation )
 
 				remove-orphans - Remove orphaned packages ( with confirmation )
 				fetchbinpkg - Downloads only binaries from remote

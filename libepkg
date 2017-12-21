@@ -368,6 +368,42 @@ remove-orphans () {
 
 }
 
+buildinstall () {
+	# Stands for build ( -Bv ) and install ( -va with --getbinpkg )
+	# Also regenerates the binhost Packages file
+
+	checkportdir
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You cannot run buildpkgonly from the user profile!"
+                exit 1
+        else
+                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@" && emerge -av "$@"
+		emaint -f binhost
+        fi
+
+        # regenerating environment here is a must!
+        env-update && source /etc/profile
+}
+
+autobuildinstall () {
+        # Stands for build ( -Bv ) and install ( -va with --getbinpkg ) automatically
+	# Also regenerates the binhost Packages file
+
+        checkportdir
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You cannot run buildpkgonly from the user profile!"
+                exit 1
+        else
+                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@" && emerge -v "$@"
+		emaint -f binhost
+        fi
+
+        # regenerating environment here is a must!
+        env-update && source /etc/profile
+}
+
 buildpkgonly () {
 	# function to only build 1 or more packages based on input
 
