@@ -247,6 +247,17 @@ cleanlocalpkg () {
 	env-update && source /etc/profile
 }
 
+src-newuse () {
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+                eerror "If you continue, you continue on your own risk!"
+                sleep 3
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --newuse --changed-use "$@"
+        else
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --newuse --changed-use "$@"
+        fi
+}
+
 recompilepkg () {
 	# function to call a recompile of a package and save it to ${PORTDIR}/packages"
 

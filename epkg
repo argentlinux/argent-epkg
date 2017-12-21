@@ -34,6 +34,9 @@ case "$action" in
 	cleanlocalpkg)
 		cleanlocalpkg
 		;;
+	cleanpkg)
+		cleanpkg "$@"
+		;;
 	upgrade)
 		checksync
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
@@ -58,6 +61,10 @@ case "$action" in
 		cleanoutdated
                 recompileallpkg
                 ;;
+	src-newuse)
+		argentsync
+		src-newuse "$@"
+		;;
 	buildpkgonly)
 		buildpkgonly "$@"
 		;;
@@ -120,12 +127,14 @@ case "$action" in
 				backuppkg - Backup specific packages with own configurations for later use
 				forceremove - *Unsafely* remove packages
 				clean - Remove packages that are no longer needed
+				cleanpkg - Remove package(s) that is no longer needed and its backup.tbz2 ( usually in /usr/portage/packages )
 				cleanoutdated - Remove local saved and outdated packages
-				cleanlocalpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages.
+				cleanlocalpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages
 
 				upgrade -  Upgrade system
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
+				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
