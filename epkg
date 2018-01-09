@@ -70,10 +70,10 @@ case "$action" in
 		buildpkgonly "$@"
 		;;
 	buildinstall)
-		buildinstall
+		buildinstall "$@"
 		;;
 	autobuildinstall)
-		autobuildinstall
+		autobuildinstall "$@"
 		;;
         autorecompilepkg)
                 argentsync
