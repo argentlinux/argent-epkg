@@ -34,9 +34,6 @@ case "$action" in
 	cleanlocalpkg)
 		cleanlocalpkg
 		;;
-	cleanpkg)
-		cleanpkg -av "$@"
-		;;
 	upgrade)
 		checksync
 		emerge -uDvaN --with-bdeps=y @system @world "$@"
@@ -64,6 +61,10 @@ case "$action" in
 	src-newuse)
 		argentsync
 		src-newuse "$@"
+		;;
+	upgrade-nocol)
+		checksync
+		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
 	buildpkgonly)
 		buildpkgonly "$@"
@@ -133,7 +134,6 @@ case "$action" in
 				backuppkg - Backup specific packages with own configurations for later use
 				forceremove - *Unsafely* remove packages
 				clean - Remove packages that are no longer needed
-				cleanpkg - Remove package(s) that is no longer needed and its backup.tbz2 ( usually in /usr/portage/packages )
 				cleanoutdated - Remove local saved and outdated packages
 				cleanlocalpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages
 
