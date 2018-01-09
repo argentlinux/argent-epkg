@@ -102,6 +102,10 @@ case "$action" in
 		argentsync
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
+	autoupgrade-nocol)
+		argentsync
+		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvN --with-bdeps=y @system @world "$@"
+		;;
 	remove-orphans)
 		remove-orphans
 		;;
@@ -138,6 +142,7 @@ case "$action" in
 				cleanlocalpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages
 
 				upgrade -  Upgrade system
+				upgrade-nocol - Upgrade system without collision protection
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
@@ -148,6 +153,7 @@ case "$action" in
 				buildinstall - Recompile/Build package(s) and install them after ( usually in /usr/portage/packges )
 
 				autoupgrade - Upgrade system (no confirmation)
+				autoupgrade-nocol - Upgrade system without collision protection ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
