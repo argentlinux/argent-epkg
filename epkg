@@ -46,18 +46,24 @@ case "$action" in
 		argentsync
 		emerge --depclean -v "$@"
 		;;
+	reinstall-depend)
+	    reinstall-depend "$@"
+	    ;;
 	backupallpkg)
 		backupallpkg "$@"
 		;;
-        recompilepkg)
+    recompilepkg)
 		argentsync
-                recompilepkg "$@"
-                ;;
-        recompileallpkg)
+        recompilepkg "$@"
+        ;;
+    recompileallpkg)
 		argentsync
 		cleanoutdated
-                recompileallpkg
-                ;;
+        recompileallpkg
+        ;;
+	recompile-depend)
+		recompile-depend "$@"
+		;;
 	src-newuse)
 		argentsync
 		src-newuse "$@"
@@ -75,16 +81,23 @@ case "$action" in
 	autobuildinstall)
 		autobuildinstall "$@"
 		;;
-        autorecompilepkg)
-                argentsync
-                cleanoutdated
-                autorecompilepkg "$@"
-                ;;
-        autorecompileallpkg)
+	autoreinstall-depend)
+	    autoreinstall-depend "$@"
+	    ;;
+    autorecompilepkg)
+        argentsync
+        cleanoutdated
+        autorecompilepkg "$@"
+        ;;
+	autorecompile-depend)
+		cleanoutdated
+		autorecompile-depend "$@"
+		;;
+    autorecompileallpkg)
 		argentsync
-                cleanoutdated
-                autorecompileallpkg
-                ;;
+        cleanoutdated
+        autorecompileallpkg
+        ;;
 	autoforceremove)
 		argentsync
 		emerge --unmerge -v "$@"
@@ -145,21 +158,25 @@ case "$action" in
 				upgrade-nocol - Upgrade system without collision protection
 				autoinstall - Install new packages (no confirmation)
 				autoremove - Remove packages safely (no confirmation)
+				reinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
+				recompile-depend - Compile/Recompile all current version packages that depend on given package(s)
 				buildpkgonly - Build/Recompile package(s) and export them locally ( usually in /usr/portage/packages )
-				buildinstall - Recompile/Build package(s) and install them after ( usually in /usr/portage/packges )
+				buildinstall - Recompile/Build package(s) and install them immediately ( usually in /usr/portage/packages )
 
 				autoupgrade - Upgrade system (no confirmation)
 				autoupgrade-nocol - Upgrade system without collision protection ( no confirmation )
+				autoreinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
+				autorecompile-depend - Compile/Recompile all current version packages that depend on given package(s) ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )
-				autobuildinstall - Build/Recompile package(s) and autoinstall them after ( no confirmation )
+				autobuildinstall - Build/Recompile package(s) and autoinstall them immediately ( no confirmation )
 
 				remove-orphans - Remove orphaned packages ( with confirmation )
 				fetchbinpkg - Downloads only binaries from remote
