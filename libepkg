@@ -317,18 +317,18 @@ recompile-depend () {
         # function to recompile all packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		    eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		    eerror "If you continue, you continue on your own risk!"
-		    sleep 3
-		    cat /dev/null > /tmp/epkg_temporary_list
-		    for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		    EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
-		    rm -f /tmp/epkg_temporary_list || exit 1
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue on your own risk!"
+		sleep 3
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         else
-            cat /dev/null > /tmp/epkg_temporary_list
-            for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-            EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
-            rm -f /tmp/epkg_temporary_list || exit 1
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         fi
 
 }
@@ -337,18 +337,18 @@ autorecompile-depend () {
         # function to recompile all packages that directly depend on this package with no confirmation
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		    eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		    eerror "If you continue, you continue on your own risk!"
-		    sleep 3
-		    cat /dev/null > /tmp/epkg_temporary_list
-		    for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		    EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
-		    rm -f /tmp/epkg_temporary_list || exit 1
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue on your own risk!"
+		sleep 3
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         else
-            cat /dev/null > /tmp/epkg_temporary_list
-            for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-            EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
-            rm -f /tmp/epkg_temporary_list || exit 1
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         fi
 
 }
@@ -357,18 +357,18 @@ reinstall-depend () {
         # function to recompile all packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		    eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		    eerror "If you continue, you continue on your own risk!"
-		    sleep 3
-		    cat /dev/null > /tmp/epkg_temporary_list
-		    for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		    emerge -va $( cat /tmp/epkg_temporary_list )
-		    rm -f /tmp/epkg_temporary_list || exit 1
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue on your own risk!"
+		sleep 3
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		emerge -va $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         else
-            cat /dev/null > /tmp/epkg_temporary_list
-            for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-            emerge -va $( cat /tmp/epkg_temporary_list )
-            rm -f /tmp/epkg_temporary_list || exit 1
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		emerge -va $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         fi
 
 }
@@ -377,18 +377,18 @@ autoreinstall-depend () {
         # function to recompile all packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		    eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		    eerror "If you continue, you continue on your own risk!"
-		    sleep 3
-		    cat /dev/null > /tmp/epkg_temporary_list
-		    for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		    emerge -v $( cat /tmp/epkg_temporary_list )
-		    rm -f /tmp/epkg_temporary_list || exit 1
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue on your own risk!"
+		sleep 3
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		emerge -v $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         else
-            cat /dev/null > /tmp/epkg_temporary_list
-            for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-            emerge -v $( cat /tmp/epkg_temporary_list )
-            rm -f /tmp/epkg_temporary_list || exit 1
+		cat /dev/null > /tmp/epkg_temporary_list
+		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
+		emerge -v $( cat /tmp/epkg_temporary_list )
+		rm -f /tmp/epkg_temporary_list || exit 1
         fi
 
 }

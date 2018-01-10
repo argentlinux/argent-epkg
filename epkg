@@ -47,20 +47,20 @@ case "$action" in
 		emerge --depclean -v "$@"
 		;;
 	reinstall-depend)
-	    reinstall-depend "$@"
-	    ;;
+		reinstall-depend "$@"
+		;;
 	backupallpkg)
 		backupallpkg "$@"
 		;;
-    recompilepkg)
+	recompilepkg)
 		argentsync
-        recompilepkg "$@"
-        ;;
-    recompileallpkg)
+		recompilepkg "$@"
+		;;
+	recompileallpkg)
 		argentsync
 		cleanoutdated
-        recompileallpkg
-        ;;
+		recompileallpkg
+		;;
 	recompile-depend)
 		recompile-depend "$@"
 		;;
@@ -82,22 +82,22 @@ case "$action" in
 		autobuildinstall "$@"
 		;;
 	autoreinstall-depend)
-	    autoreinstall-depend "$@"
-	    ;;
-    autorecompilepkg)
-        argentsync
-        cleanoutdated
-        autorecompilepkg "$@"
-        ;;
+		autoreinstall-depend "$@"
+		;;
+	autorecompilepkg)
+		argentsync
+		cleanoutdated
+		autorecompilepkg "$@"
+		;;
 	autorecompile-depend)
 		cleanoutdated
 		autorecompile-depend "$@"
 		;;
-    autorecompileallpkg)
+	autorecompileallpkg)
 		argentsync
-        cleanoutdated
-        autorecompileallpkg
-        ;;
+		cleanoutdated
+		autorecompileallpkg
+		;;
 	autoforceremove)
 		argentsync
 		emerge --unmerge -v "$@"
