@@ -53,7 +53,6 @@ case "$action" in
 		backupallpkg "$@"
 		;;
 	recompilepkg)
-		argentsync
 		recompilepkg "$@"
 		;;
 	recompileallpkg)
