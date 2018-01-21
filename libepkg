@@ -28,7 +28,6 @@ checkportageconfig () {
 
 	if [ "${confhash}" != "${rconfhash}" ] ; then
 		eerror "Portage config is out of date, run "epkg update" first"
-		exit 1
 	fi
 	popd > /dev/null 2>&1
 }
@@ -44,7 +43,6 @@ checkportagetree () {
 
 	if [ "${treehash}" != "${rtreehash}" ] ; then
 		eerror "Portage tree is out of date, run "epkg update" first"
-		exit 1
 	fi
 	popd > /dev/null 2>&1
 }
@@ -58,7 +56,6 @@ checkargentoverlay () {
 	export local roverlayhash=$(git rev-parse @{u})
 	if [  "${overlayhash}" != "${roverlayhash}" ] ; then
 		eerror "argent-ws overlay is out of date, run "epkg update" first"
-		exit 1
 	fi
 }
 
