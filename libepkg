@@ -97,12 +97,12 @@ checkportdir () {
                 exit 1
         fi
 
-        # check if ${PORTDIR}/packages exists
+        # check if ${PKDIR} exists
 
-        if [ ! -d "${PORTDIR}"/packages ] ; then
-                eerror "No such directory: ${PORTDIR}/packages"
+        if [ ! -d "${PKDIR}" ] ; then
+                eerror "No such directory: ${PKDIR}/"
                 echo "Consider creating the directory with the right ownership:"
-                echo "i.e.: chgrp portage ${PORTDIR}/packages"
+                echo "i.e.: chgrp portage ${PKDIR}/"
                 exit 1
         fi
 }
@@ -138,21 +138,24 @@ backuppkg () {
 		exit 1
 	fi
 
-	# checking if ${PORTDIR} exists
-	# usually it's /usr/portage if you're on avasile --usermode or --devmode
+	# checking if ${PKDIR} exists
+	# usually it's /usr/portage/ if you're on avasile --usermode or --devmode
 
-	if [ -d "${PORTDIR}" ] ; then
+	if [ -d "${PKGDIR}" ] ; then
 		quickpkg --include-config y --include-unmodified-config y "$@"
 		echo ""
-		echo "All packages were saved in ${PORTDIR}/packages/ by category"
+		echo "All packages were saved in ${PKGDIR} by category"
 		echo "Please make sure these files will not be overwritted!"
 		echo "If you consider further backup on the same package"
-		echo "consider copying packages from ${PORTDIR}/packages/ into customized directories"
+		echo "consider copying packages from ${PKGDIR} into customized directories"
 		echo "Although, not recommended, you can epkg install them by path ( from customized directories )"
+		echo "To customize directory, you can use variable PKGDIR as: PKGDIR="/location/" epkg backuppkg"
+		echo " "
 	else
-		echo ""
-		eerror "No such directory: /usr/portage/"
+		echo "  "
+		eerror "No such directory: ${PKGDIR}"
 		echo "Please consider running: epkg update"
+		echo " "
 		exit 1
 	fi
 
@@ -194,18 +197,12 @@ cleanoutdated () {
 	# we have 2 checks here: if usr/portage and usr/portage/packages really exist
 	# we may never know what users do to their portage dirs in Gentoo system 
 
-	if [ -d "${PORTDIR}" ] ; then
-		if [ -d "${PORTDIR}/packages/" ] ; then
-			/usr/bin/eclean-pkg
-		else
-			eerror "No such directory ${PORTDIR}/packages"
-			echo "Please consider: mkdir ${PORTDIR}/packages"
-			echo "chgrp portage ${PORTDIR}/packages"
-			exit 1
-		fi
+	if [ -d "${PKGDIR}" ] ; then
+		/usr/bin/eclean-pkg
 	else
-		eerror "No such directory: /usr/portage/"
-		echo "Please consider running: epkg update"
+		eerror "No such directory ${PKGDIR}"
+		echo "Please consider: mkdir ${PKGDIR}/"
+		echo "chgrp portage ${PKGDIR}"
 		exit 1
 	fi
 
@@ -222,23 +219,15 @@ cleanlocalpkg () {
         # it also includes deletion of /usr/portage/Packages
 
         # if we do not have any /usr/portage, there is no reason we should continue
-        if [ -d "${PORTDIR}" ] ; then
-
-                if [ -d "${PORTDIR}/packages/" ] ; then
-
-                        rm -rf "${PORTDIR}"/packages/* || exit 1
-                else
-                        eerror "No such directory ${PORTDIR}/packages/"
-                        echo "Make sure you have this directory"
-                        echo "Also make sure you have the right GID:"
-                        echo "i.e.: chgrp portage ${PORTDIR}/packages"
-			exit 1
-                fi
-        else
-                eerror "You do not have ${PORTDIR} directory"
-                echo "Please, consider running: epkg update"
+	if [ -d "${PKGDIR}" ] ; then
+		rm -rf "${PKGDIR}"/* || exit 1
+	else
+		eerror "No such directory ${PKGDIR}"
+		echo "Make sure you have this directory"
+		echo "Also make sure you have the right GID:"
+		echo "i.e.: chgrp portage ${PKDIR}"
 		exit 1
-        fi
+	fi
 
 	# regenerating environment here is a must!
 	env-update && source /etc/profile
@@ -256,7 +245,7 @@ src-newuse () {
 }
 
 recompilepkg () {
-	# function to call a recompile of a package and save it to ${PORTDIR}/packages"
+	# function to call a recompile of a package and save it to ${PKDIR}"
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
@@ -286,7 +275,7 @@ recompileallpkg () {
 
 autorecompilepkg () {
 
-    # function to call a recompile of a package and save it to ${PORTDIR}/packages"
+    # function to call a recompile of a package and save it to ${PKDIR}"
 
     if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
         eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"

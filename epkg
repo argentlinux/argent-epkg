@@ -13,6 +13,10 @@ case "$action" in
 		checksync
 		emerge -av "$@"
 		;;
+	install-no-collision)
+		checksync
+		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -av "$@"
+		;;
 	remove)
 		checksync
 		emerge --depclean -av "$@"
@@ -41,6 +45,10 @@ case "$action" in
 	autoinstall)
 		argentsync
 		emerge -v "$@"
+		;;
+	autoinstall-no-collision)
+		argentsync
+		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -v "$@"
 		;;
 	autoremove)
 		argentsync
@@ -155,7 +163,9 @@ case "$action" in
 
 				upgrade -  Upgrade system
 				upgrade-nocol - Upgrade system without collision protection
+				install-no-collision - Install a package forcefully without collision protection
 				autoinstall - Install new packages (no confirmation)
+				autoinstall-no-collision - Install new package forcefully without collision protection ( no confirmation )
 				autoremove - Remove packages safely (no confirmation)
 				reinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
