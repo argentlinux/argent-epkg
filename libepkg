@@ -97,12 +97,12 @@ checkportdir () {
                 exit 1
         fi
 
-        # check if ${PKDIR} exists
+        # check if ${PKGDIR} exists
 
-        if [ ! -d "${PKDIR}" ] ; then
-                eerror "No such directory: ${PKDIR}/"
+        if [ ! -d "${PKGDIR}" ] ; then
+                eerror "No such directory: ${PKGDIR}/"
                 echo "Consider creating the directory with the right ownership:"
-                echo "i.e.: chgrp portage ${PKDIR}/"
+                echo "i.e.: chgrp portage ${PKGDIR}/"
                 exit 1
         fi
 }
@@ -138,7 +138,7 @@ backuppkg () {
 		exit 1
 	fi
 
-	# checking if ${PKDIR} exists
+	# checking if ${PKGDIR} exists
 	# usually it's /usr/portage/ if you're on avasile --usermode or --devmode
 
 	if [ -d "${PKGDIR}" ] ; then
@@ -225,7 +225,7 @@ cleanlocalpkg () {
 		eerror "No such directory ${PKGDIR}"
 		echo "Make sure you have this directory"
 		echo "Also make sure you have the right GID:"
-		echo "i.e.: chgrp portage ${PKDIR}"
+		echo "i.e.: chgrp portage ${PKGDIR}"
 		exit 1
 	fi
 
@@ -245,7 +245,7 @@ src-newuse () {
 }
 
 recompilepkg () {
-	# function to call a recompile of a package and save it to ${PKDIR}"
+	# function to call a recompile of a package and save it to ${PKGDIR}"
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
@@ -275,7 +275,7 @@ recompileallpkg () {
 
 autorecompilepkg () {
 
-    # function to call a recompile of a package and save it to ${PKDIR}"
+    # function to call a recompile of a package and save it to ${PKGDIR}"
 
     if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
         eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
