@@ -22,7 +22,7 @@ case "$action" in
 		emerge --depclean -av "$@"
 		;;
 	backuppkg)
-		backuppkg "$@"
+		PKGDIR="${PKGDIR:-}" backuppkg "$@"
 		;;
 	forceremove)
 		checksync
@@ -58,7 +58,7 @@ case "$action" in
 		reinstall-depend "$@"
 		;;
 	backupallpkg)
-		backupallpkg "$@"
+		KGDIR="${PKGDIR:-}" backupallpkg "$@"
 		;;
 	recompilepkg)
 		recompilepkg "$@"
@@ -83,17 +83,16 @@ case "$action" in
 		buildpkgonly "$@"
 		;;
 	buildinstall)
-		buildinstall "$@"
+		KGDIR="${PKGDIR:-}" buildinstall "$@"
 		;;
 	autobuildinstall)
-		autobuildinstall "$@"
+		KGDIR="${PKGDIR:-}" autobuildinstall "$@"
 		;;
 	autoreinstall-depend)
 		autoreinstall-depend "$@"
 		;;
 	autorecompilepkg)
 		argentsync
-		cleanoutdated
 		autorecompilepkg "$@"
 		;;
 	autorecompile-depend)

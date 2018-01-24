@@ -65,7 +65,9 @@ checkmakeconf () {
 
         if [ -e "/etc/portage/make.conf" ] ; then
                 . /etc/portage/make.conf
-        else
+		unset PKGDIR
+		export PKGDIR="${PKGDIR:-$(cat /etc/portage/make.conf | grep 'PKGDIR=' | cut -d '"' -f2)}"
+	else
                 eerror "The file does not match the pattern of environment script"
                 echo "Please consider using avasile to change to one of the modes"
                 echo "avasile --help"
@@ -132,9 +134,9 @@ backuppkg () {
 
 	checkmakeconf
 
-
-	if [[ "$@" = "" ]] ; then
+	if [[ -z "$@" ]] ; then
 		eerror "You have not specified any package to backup"
+		echo " "
 		exit 1
 	fi
 
@@ -154,7 +156,8 @@ backuppkg () {
 	else
 		echo "  "
 		eerror "No such directory: ${PKGDIR}"
-		echo "Please consider running: epkg update"
+		echo "Please consider creating the $PKGDIR directory"
+		echo "And set $PKGDIR GID to portage!"
 		echo " "
 		exit 1
 	fi
@@ -166,8 +169,13 @@ backuppkg () {
 backupallpkg () {
 	# function to *backup all packages in the system* for future use
 
-
 	# the unconventional way here: we import /etc/portage/make.conf into current local function
+        if [[ -z "$@" ]] ; then
+                eerror "You have not specified any package to backup"
+                echo " "
+                exit 1
+        fi
+
 	checkportdir
 
 	eerror "Warning: If you backup everything, make sure you keep the packages safe :)"
@@ -437,6 +445,11 @@ remove-orphans () {
 buildinstall () {
 	# Stands for build ( -Bv ) and install ( -va with --getbinpkg )
 	# Also regenerates the binhost Packages file
+        if [[ -z "$@" ]] ; then
+                eerror "You have not specified any package to build & install"
+		echo " "
+                exit 1
+        fi
 
 	checkportdir
 
@@ -456,6 +469,12 @@ buildinstall () {
 autobuildinstall () {
         # Stands for build ( -Bv ) and install ( -va with --getbinpkg ) automatically
 	# Also regenerates the binhost Packages file
+
+        if [[ -z "$@" ]] ; then
+                eerror "You have not specified any package to build & install"
+                echo " "
+                exit 1
+        fi
 
         checkportdir
 
