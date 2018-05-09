@@ -75,6 +75,10 @@ case "$action" in
 		argentsync
 		src-newuse "$@"
 		;;
+	upgrade-specific)
+		checksync
+		emerge -uDvaN "$@"
+		;;
 	upgrade-nocol)
 		checksync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@"
@@ -162,6 +166,7 @@ case "$action" in
 
 				upgrade -  Upgrade system
 				upgrade-nocol - Upgrade system without collision protection
+				upgrade-specific - Upgrade specific package
 				install-no-collision - Install a package forcefully without collision protection
 				autoinstall - Install new packages (no confirmation)
 				autoinstall-no-collision - Install new package forcefully without collision protection ( no confirmation )
