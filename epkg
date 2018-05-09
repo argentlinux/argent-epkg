@@ -58,7 +58,7 @@ case "$action" in
 		reinstall-depend "$@"
 		;;
 	backupallpkg)
-		KGDIR="${PKGDIR:-}" backupallpkg "$@"
+		PKGDIR="${PKGDIR:-}" backupallpkg "$@"
 		;;
 	recompilepkg)
 		recompilepkg "$@"
@@ -87,10 +87,10 @@ case "$action" in
 		buildpkgonly "$@"
 		;;
 	buildinstall)
-		KGDIR="${PKGDIR:-}" buildinstall "$@"
+		PKGDIR="${PKGDIR:-}" buildinstall "$@"
 		;;
 	autobuildinstall)
-		KGDIR="${PKGDIR:-}" autobuildinstall "$@"
+		PKGDIR="${PKGDIR:-}" autobuildinstall "$@"
 		;;
 	autoreinstall-depend)
 		autoreinstall-depend "$@"
