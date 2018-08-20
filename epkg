@@ -71,6 +71,9 @@ case "$action" in
 	recompile-depend)
 		recompile-depend "$@"
 		;;
+	recompile-depend-new)
+		recompile-depend-new "$@"
+		;;
 	src-newuse)
 		argentsync
 		src-newuse "$@"
@@ -100,8 +103,11 @@ case "$action" in
 		autorecompilepkg "$@"
 		;;
 	autorecompile-depend)
-		cleanoutdated
 		autorecompile-depend "$@"
+		;;
+	autorecompile-depend-new)
+		cleanoutdated
+		autorecompile-depend-new "$@"
 		;;
 	autorecompileallpkg)
 		argentsync
@@ -176,7 +182,8 @@ case "$action" in
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
-				recompile-depend - Compile/Recompile all current version packages that depend on given package(s)
+				recompile-depend - Compile/Recompile all currently installed packages that depend on given package(s)
+				recompile-depend-new - Compile/Recompile all newly installed packages that depend on given package(s)
 				buildpkgonly - Build/Recompile package(s) and export them locally ( usually in /usr/portage/packages )
 				buildinstall - Recompile/Build package(s) and install them immediately ( usually in /usr/portage/packages )
 
@@ -185,7 +192,8 @@ case "$action" in
 				autoreinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
-				autorecompile-depend - Compile/Recompile all current version packages that depend on given package(s) ( no confirmation )
+				autorecompile-depend - Compile/Recompile all currently installed packages that depend on given package(s) ( no confirmation )
+				autorecompile-depend-new - Compile/Recompile all newly-installed packages that depend on given package(s) ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )

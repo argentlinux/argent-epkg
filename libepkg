@@ -308,7 +308,35 @@ autorecompileallpkg () {
 }
 
 recompile-depend () {
-        # function to recompile all packages that directly depend on this package
+        # function to recompile all the packages that directly depend on this package
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+                eerror "If you continue, you continue on your own risk!"
+                sleep 3
+                cat /dev/null > /tmp/epkg_temporary_list
+                equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+                if [[ -s "/tmp/epkg_temporary_list" ]] ; then
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+                else
+                        echo "There are no packages that depend on given package(s)"
+                fi
+                rm -f /tmp/epkg_temporary_list || exit 1
+        else
+                cat /dev/null > /tmp/epkg_temporary_list
+                equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+                if [[ -s "/tmp/epkg_temporary_list" ]] ; then
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+                else
+                        echo "There are no packages that depend on given package(s)"
+                fi
+                rm -f /tmp/epkg_temporary_list || exit 1
+        fi
+
+}
+
+recompile-depend-new () {
+        # function to recompile all the new packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
@@ -336,7 +364,35 @@ recompile-depend () {
 }
 
 autorecompile-depend () {
-        # function to recompile all packages that directly depend on this package with no confirmation
+        # function to recompile all the packages that directly depend on this package with no confirmation
+
+        if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+                eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+                eerror "If you continue, you continue on your own risk!"
+                sleep 3
+                cat /dev/null > /tmp/epkg_temporary_list
+                equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+                if [[ -s "/tmp/epkg_temporary_list" ]] ; then
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
+                else
+                        echo "There are no packages that depend on given package(s)"
+                fi
+                rm -f /tmp/epkg_temporary_list || exit 1
+        else
+                cat /dev/null > /tmp/epkg_temporary_list
+                equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+                if [[ -s "/tmp/epkg_temporary_list" ]] ; then
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
+                else
+                        echo "There are no packages that depend on given package(s)"
+                fi
+                rm -f /tmp/epkg_temporary_list || exit 1
+        fi
+
+}
+
+autorecompile-depend-new () {
+        # function to recompile all the new packages that directly depend on this package with no confirmation
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
@@ -345,7 +401,7 @@ autorecompile-depend () {
 		cat /dev/null > /tmp/epkg_temporary_list
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
 		else
 			echo "There are no packages that depend on given package(s)"
 		fi
@@ -354,7 +410,7 @@ autorecompile-depend () {
 		cat /dev/null > /tmp/epkg_temporary_list
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
 		else
 			echo "There are no packages that depend on given package(s)"
 		fi
@@ -364,7 +420,7 @@ autorecompile-depend () {
 }
 
 reinstall-depend () {
-        # function to recompile all packages that directly depend on this package
+        # function to recompile all new packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
@@ -384,7 +440,7 @@ reinstall-depend () {
 }
 
 autoreinstall-depend () {
-        # function to recompile all packages that directly depend on this package
+        # function to recompile all new packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
