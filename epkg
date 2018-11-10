@@ -40,7 +40,11 @@ case "$action" in
 		;;
 	upgrade)
 		checksync
-		emerge -uDvaN --with-bdeps=y @system @world "$@"
+		emerge -uDvaN @system @world "$@"
+		;;
+	upgrade-full)
+		checksync
+		emerge -udvaN --with-bdeps=y @system @world "$@"
 		;;
 	autoinstall)
 		argentsync
@@ -129,11 +133,19 @@ case "$action" in
 		;;
 	autoupgrade)
 		argentsync
+		emerge -uDvN @system @world "$@"
+		;;
+	autoupgrade-full)
+		argentsync
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	autoupgrade-nocol)
 		argentsync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvN --with-bdeps=y @system @world "$@"
+		;;
+	upgrade-specific)
+		checksync
+		emerge -uDvN "$@"
 		;;
 	remove-orphans)
 		remove-orphans
@@ -170,9 +182,10 @@ case "$action" in
 				cleanoutdated - Remove local saved and outdated packages
 				cleanlocalpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages
 
-				upgrade -  Upgrade system
+				upgrade -  Upgrade system. No build dependencies are upgraded
+				upgrade-full - Upgrade system. All build dependencies included for upgrade
 				upgrade-nocol - Upgrade system without collision protection
-				upgrade-specific - Upgrade specific package
+				upgrade-specific - Upgrade specific package(s)
 				install-no-collision - Install a package forcefully without collision protection
 				autoinstall - Install new packages (no confirmation)
 				autoinstall-no-collision - Install new package forcefully without collision protection ( no confirmation )
@@ -187,8 +200,10 @@ case "$action" in
 				buildpkgonly - Build/Recompile package(s) and export them locally ( usually in /usr/portage/packages )
 				buildinstall - Recompile/Build package(s) and install them immediately ( usually in /usr/portage/packages )
 
-				autoupgrade - Upgrade system (no confirmation)
+				autoupgrade - Upgrade system (no confirmation). No build dependencies are upgraded
+				autoupgrade-full - Upgrade system ( no confirmation ). All build dependencies included for upgrade
 				autoupgrade-nocol - Upgrade system without collision protection ( no confirmation )
+				autoupgrade-specific - Upgrade specific package(s) ( no confirmation )
 				autoreinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
