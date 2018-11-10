@@ -44,8 +44,16 @@ case "$action" in
 		;;
 	upgrade-full)
 		checksync
-		emerge -udvaN --with-bdeps=y @system @world "$@"
+		emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
+        upgrade-specific)
+                checksync
+                emerge -uDvaN "$@"
+		;;
+        upgrade-nocol)
+                checksync
+                FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@"
+                ;;
 	autoinstall)
 		argentsync
 		emerge -v "$@"
@@ -81,14 +89,6 @@ case "$action" in
 	src-newuse)
 		argentsync
 		src-newuse "$@"
-		;;
-	upgrade-specific)
-		checksync
-		emerge -uDvaN "$@"
-		;;
-	upgrade-nocol)
-		checksync
-		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@"
 		;;
 	buildpkgonly)
 		buildpkgonly "$@"
