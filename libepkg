@@ -529,7 +529,7 @@ buildinstall () {
                 eerror "You cannot run buildpkgonly from the user profile!"
                 exit 1
         else
-                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
 		EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge -av "$@"
 		emaint -f binhost
         fi
@@ -554,7 +554,7 @@ autobuildinstall () {
                 eerror "You cannot run buildpkgonly from the user profile!"
                 exit 1
         else
-                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
 		EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge -v "$@"
 		emaint -f binhost
         fi
@@ -574,13 +574,11 @@ buildpkgonly () {
                 eerror "You cannot run buildpkgonly from the user profile!"
                 exit 1
         else
-                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
         fi
 
         # regenerating environment here is a must!
         env-update && source /etc/profile
-
-
 }
 
 autobuildpkgonly () {
@@ -594,7 +592,7 @@ autobuildpkgonly () {
                 eerror "You cannot run buildpkgonly from the user profile!"
                 exit 1
         else
-                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
+                EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
         fi
 
         # regenerating environment here is a must!
