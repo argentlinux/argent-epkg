@@ -574,7 +574,7 @@ buildpkgonly () {
                 eerror "You cannot run buildpkgonly from the user profile!"
                 exit 1
         else
-                EMERGE_DEFAULT_OPTS="--getbinpkgonly --rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
+                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bva "$@"
         fi
 
         # regenerating environment here is a must!
@@ -594,7 +594,7 @@ autobuildpkgonly () {
                 eerror "You cannot run buildpkgonly from the user profile!"
                 exit 1
         else
-                EMERGE_DEFAULT_OPTS="--getbinpkgonly --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
+                EMERGE_DEFAULT_OPTS="--getbinpkg --rebuilt-binaries" emerge --with-bdeps=y -Bv "$@"
         fi
 
         # regenerating environment here is a must!
