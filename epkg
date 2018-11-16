@@ -17,6 +17,10 @@ case "$action" in
 		checksync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -av "$@"
 		;;
+	install-bin-pkg)
+		checksync
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -av "$@"
+		;;
 	remove)
 		checksync
 		emerge --depclean -av "$@"
@@ -61,6 +65,10 @@ case "$action" in
 	autoinstall-no-collision)
 		argentsync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -v "$@"
+		;;
+	autoinstall-bin-pkg)
+		argentsync
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -v "$@"
 		;;
 	autoremove)
 		argentsync
@@ -187,11 +195,15 @@ case "$action" in
 				upgrade-nocol - Upgrade system without collision protection
 				upgrade-specific - Upgrade specific package(s)
 				install-no-collision - Install a package forcefully without collision protection
+				install-bin-pkg - Install only a precompiled binary package if available
+
 				autoinstall - Install new packages (no confirmation)
 				autoinstall-no-collision - Install new package forcefully without collision protection ( no confirmation )
+				autoinstall-bin-pkg - Install only a precompiled binary package if available ( no confirmation )
 				autoremove - Remove packages safely (no confirmation)
 				reinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
+
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
@@ -204,12 +216,14 @@ case "$action" in
 				autoupgrade-full - Upgrade system ( no confirmation ). All build dependencies included for upgrade
 				autoupgrade-nocol - Upgrade system without collision protection ( no confirmation )
 				autoupgrade-specific - Upgrade specific package(s) ( no confirmation )
+
 				autoreinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
 				autorecompile-depend - Compile/Recompile all currently installed packages that depend on given package(s) ( no confirmation )
 				autorecompile-depend-new - Compile/Recompile all newly-installed packages that depend on given package(s) ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
+
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )
 				autobuildinstall - Build/Recompile package(s) and autoinstall them immediately ( no confirmation )
