@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export ADD_OPTS="${ADD_OPTS:-}"
+
 # import gentoo functions
 source /lib/gentoo/functions.sh
 
@@ -317,7 +319,7 @@ recompile-depend () {
                 cat /dev/null > /tmp/epkg_temporary_list
                 equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
                 if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge "${ADD_OPTS}" -va $( cat /tmp/epkg_temporary_list )
                 else
                         echo "There are no packages that depend on given package(s)"
                 fi
@@ -326,7 +328,7 @@ recompile-depend () {
                 cat /dev/null > /tmp/epkg_temporary_list
                 equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
                 if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge "${ADD_OPTS}" -va $( cat /tmp/epkg_temporary_list )
                 else
                         echo "There are no packages that depend on given package(s)"
                 fi
@@ -345,7 +347,7 @@ recompile-depend-new () {
 		cat /dev/null > /tmp/epkg_temporary_list
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
                 if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list ) "${ADD_OPTS}"
                 else
                         echo "There are no packages that depend on given package(s)"
                 fi
@@ -354,7 +356,7 @@ recompile-depend-new () {
 		cat /dev/null > /tmp/epkg_temporary_list
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
                 if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list )
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va $( cat /tmp/epkg_temporary_list ) "${ADD_OPTS}"
                 else
                         echo "There are no packages that depend on given package(s)"
                 fi
@@ -373,7 +375,7 @@ autorecompile-depend () {
                 cat /dev/null > /tmp/epkg_temporary_list
                 equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
                 if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list ) "${ADD_OPTS}"
                 else
                         echo "There are no packages that depend on given package(s)"
                 fi
@@ -382,7 +384,7 @@ autorecompile-depend () {
                 cat /dev/null > /tmp/epkg_temporary_list
                 equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
                 if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
+                        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list ) "${ADD_OPTS}"
                 else
                         echo "There are no packages that depend on given package(s)"
                 fi
@@ -401,7 +403,7 @@ autorecompile-depend-new () {
 		cat /dev/null > /tmp/epkg_temporary_list
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
+			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list ) "${ADD_OPTS}"
 		else
 			echo "There are no packages that depend on given package(s)"
 		fi
@@ -410,7 +412,7 @@ autorecompile-depend-new () {
 		cat /dev/null > /tmp/epkg_temporary_list
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
+			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list ) "${ADD_OPTS}"
 		else
 			echo "There are no packages that depend on given package(s)"
 		fi
