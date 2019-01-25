@@ -44,19 +44,19 @@ case "$action" in
 		;;
 	upgrade)
 		checksync
-		emerge -uDvaN @system @world "$@"
+		emerge -uDvaN @system @world "$@" --backtrack=150
 		;;
 	upgrade-full)
 		checksync
-		emerge -uDvaN --with-bdeps=y @system @world "$@"
+		emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
 		;;
         upgrade-specific)
                 checksync
-                emerge -uDvaN "$@"
+                emerge -uDvaN "$@" --backtrack=150
 		;;
         upgrade-nocol)
                 checksync
-                FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@"
+                FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
                 ;;
 	autoinstall)
 		argentsync
