@@ -135,9 +135,18 @@ case "$action" in
 		emerge --depclean -q
 		;;
 	autobuildpkgonly)
-		argentsync
-		cleanoutdated
-		autobuildpkgonly "$@"
+			secondoption=$1
+			shift
+			case "$secondoption" in
+			--skip-update)
+				autobuildpkgonly "$@"
+				;;
+			*)
+				argentsync
+				cleanoutdated
+				autobuildpkgonly "$@"
+				;;
+			esac
 		;;
 	autoupgrade)
 		argentsync
