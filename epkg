@@ -78,7 +78,7 @@ case "$action" in
 		reinstall-depend "$@"
 		;;
 	backupallpkg)
-		PKGDIR="${PKGDIR:-}" backupallpkg "$@"
+		PKGDIR="${PKGDIR:-}" backupallpkg @system @world
 		;;
 	recompilepkg)
 		recompilepkg "$@"
