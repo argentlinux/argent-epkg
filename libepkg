@@ -198,10 +198,25 @@ backupallpkg () {
                 eerror "If you continue, you continue on your own risk!"
 		eerror "Make sure you keep the backup safe!"
                 sleep 3
-                quickpkg --include-config y --include-unmodified-config y $(qlist -IC)
+		if [[ ! -e "/tmp/temporary_list_backup" ]] ; then
+			for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
+			quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
+		else
+			rm -f /tmp/temporary_list_backup
+			for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
+			quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
+		fi
+
         else
-                quickpkg --include-config y --include-unmodified-config y $(qlist -IC)
-        fi
+                if [[ ! -e "/tmp/temporary_list_backup" ]] ; then
+                        for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
+                        quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
+                else
+                        rm -f /tmp/temporary_list_backup
+                        for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
+                        quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
+                fi
+	fi
 
 	# regenerating environment here is a must!
 	env-update && source /etc/profile
