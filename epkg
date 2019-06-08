@@ -95,7 +95,6 @@ case "$action" in
 		recompile-depend-new "$@"
 		;;
 	src-newuse)
-		argentsync
 		src-newuse "$@"
 		;;
 	buildpkgonly)
