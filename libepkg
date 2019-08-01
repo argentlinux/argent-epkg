@@ -188,10 +188,14 @@ fetchminimalsync() {
                 git branch -u origin/master master
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
 	else
-		pushd /var/lib/layman/argent-ws/
+		pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1
 			git pull
 		popd
 	fi
+
+	pushd /opt/argentws-build/ > /dev/null 2>&1
+		git pull
+	popd
 
 }
 
