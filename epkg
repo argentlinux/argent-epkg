@@ -178,6 +178,9 @@ case "$action" in
 	update)
 		fetchminimalsync
 		;;
+	devsync)
+		argentsync
+		;;
 	sysinfo)
 		emerge --info
 		;;
@@ -211,6 +214,7 @@ case "$action" in
 				autoremove - Remove packages safely (no confirmation)
 				reinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
+				devsync - Upgrade all Portage overlay structure with needed ebuilds for development / compilation
 
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
