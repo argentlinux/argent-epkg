@@ -189,7 +189,7 @@ fetchminimalsync() {
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
 	else
 		cd /var/lib/layman/argent-ws/
-		git pull --depth=1 origin master
+		git pull --unshallow
 	fi
 
 }
