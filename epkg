@@ -156,11 +156,10 @@ case "$action" in
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	autoupgrade-nocol)
-		argentsync
+		fetchminimalsync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	upgrade-specific)
-		checksync
 		emerge -uDvN "$@"
 		;;
 	remove-orphans)
@@ -180,6 +179,9 @@ case "$action" in
 		;;
 	devsync)
 		argentsync
+		;;
+	force-sync)
+		forcesync
 		;;
 	sysinfo)
 		emerge --info

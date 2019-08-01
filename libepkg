@@ -137,6 +137,20 @@ syncrepos () {
 	emerge --sync
 }
 
+forcesync () {
+	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
+	git pull --unshallow
+	popd
+
+	pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1
+	git pull --unshallow
+	popd
+
+	pushd /opt/argentws-build > /dev/null 2>&1
+	git pull --unshallow
+	popd
+}
+
 fetchminimalsync() {
         # fetch minimal portage tree
         # in usermode we don't want the whole tree of gentoo ebuilds
