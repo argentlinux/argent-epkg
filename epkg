@@ -59,19 +59,19 @@ case "$action" in
                 FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
                 ;;
 	autoinstall)
-		argentsync
+		fetchminimalsync
 		emerge -v "$@"
 		;;
 	autoinstall-no-collision)
-		argentsync
+		fetchminimalsync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -v "$@"
 		;;
 	autoinstall-bin-pkg)
-		argentsync
+		fetchminimalsync
 		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -v "$@"
 		;;
 	autoremove)
-		argentsync
+		fetchminimalsync
 		emerge --depclean -v "$@"
 		;;
 	reinstall-depend)
@@ -130,7 +130,7 @@ case "$action" in
 		emerge --unmerge -v "$@"
 		;;
 	autoclean)
-		argentsync
+		fetchminimalsync
 		emerge --depclean -q
 		;;
 	autobuildpkgonly)
@@ -148,11 +148,11 @@ case "$action" in
 			esac
 		;;
 	autoupgrade)
-		argentsync
+		fetchminimalsync
 		emerge -uDvN @system @world "$@"
 		;;
 	autoupgrade-full)
-		argentsync
+		fetchminimalsync
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	autoupgrade-nocol)
@@ -176,7 +176,7 @@ case "$action" in
 		emerge -s "$@"
 		;;
 	update)
-		argentsync
+		fetchminimalsync
 		;;
 	sysinfo)
 		emerge --info

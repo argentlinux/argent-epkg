@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 export ADD_OPTS="${ADD_OPTS:-}"
+
 export local ENABLE_COLOR="\e[1;49;34m"
 export local DISABLE_COLOR="\e[0m"
 
+export local PORTAGE_DIR="/usr/portage/"
 
 # import gentoo functions
 source /lib/gentoo/functions.sh
@@ -133,6 +135,50 @@ syncrepos () {
 	fi
 
 	emerge --sync
+}
+
+fetchminimalsync() {
+        # fetch minimal portage tree
+        # in usermode we don't want the whole tree of gentoo ebuilds
+        # but we need portage profiles portage metadata && portage eclasses
+        # so make a sparse-checkout, to fetch only what we need
+        if [[ ! -d "${PORTAGE_DIR}"/.git ]] ; then
+                einfo "Injecting usermode (minimal) gentoo portage tree"
+                cd "${PORTAGE_DIR}" && git init > /dev/null 2>&1
+                git remote add origin https://gitlab.com/argent/portage.git
+                git config core.sparsecheckout true
+                echo "profiles/*" >> .git/info/sparse-checkout
+                echo "metadata/*" >> .git/info/sparse-checkout
+                echo "eclass/*" >> .git/info/sparse-checkout
+                echo ".gitignore" >> .git/info/sparse-checkout
+                git pull --depth=1 origin master
+                git branch -u origin/master master
+                rm -rf ""${PORTAGE_DIR}"/profiles/updates"
+        else
+		# We need minimal git pull if the folder really exists
+		cd "${PORTAGE_DIR}"
+		git pull --depth=1 origin master
+		git branch -u origin/master master
+	fi
+
+	if [[ ! -d "/var/lib/layman/argent-ws/.git" ]] ; then
+		einfo "Injecting usermode argent-ws overlay"
+		cd "/var/lib/layman/argent-ws/" && git init > /dev/null 2>&1
+		git remote add origin https://gitlab.com/argent/argent-ws.git
+		git config core.sparsecheckout true
+                echo "profiles/*" >> .git/info/sparse-checkout
+                echo "metadata/*" >> .git/info/sparse-checkout
+                echo "eclass/*" >> .git/info/sparse-checkout
+                echo ".gitignore" >> .git/info/sparse-checkout
+                git pull --depth=1 origin master
+                git branch -u origin/master master
+                rm -rf ""${PORTAGE_DIR}"/profiles/updates"
+	else
+		cd /var/lib/layman/argent-ws/
+		git pull --depth=1 origin master
+		git branch -u origin/master master
+	fi
+
 }
 
 backuppkg () {
