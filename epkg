@@ -10,8 +10,17 @@ shift
 
 case "$action" in
 	install)
-		checksync
-		emerge -av "$@"
+               secondoption=$1
+               shift
+               case "$secondoption" in
+		--skip-check)
+                        emerge -av "$@"
+                        ;;
+		*)
+			checksync
+                        emerge -av "$@"
+                        ;;
+		esac
 		;;
 	install-no-collision)
 		checksync
@@ -22,8 +31,17 @@ case "$action" in
 		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -av "$@"
 		;;
 	remove)
-		checksync
-		emerge --depclean -av "$@"
+               secondoption=$1
+               shift
+               case "$secondoption" in
+                --skip-check)
+                        emerge --depclean -av "$@"
+                        ;;
+                *)
+                        checksync
+                        emerge --depclean -av "$@"
+                        ;;
+                esac
 		;;
 	backuppkg)
 		PKGDIR="${PKGDIR:-}" backuppkg "$@"
