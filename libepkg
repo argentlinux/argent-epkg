@@ -138,6 +138,7 @@ syncrepos () {
 }
 
 forcesync () {
+	# Full update, everything caught in history
 	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
 	git pull --unshallow
 	popd
@@ -172,7 +173,6 @@ fetchminimalsync() {
 		# We need minimal git pull if the folder really exists
 		cd "${PORTAGE_DIR}"
 		git pull --depth=1 origin master
-		git branch -u origin/master master
 	fi
 
 	if [[ ! -d "/var/lib/layman/argent-ws/.git" ]] ; then
@@ -190,7 +190,6 @@ fetchminimalsync() {
 	else
 		cd /var/lib/layman/argent-ws/
 		git pull --depth=1 origin master
-		git branch -u origin/master master
 	fi
 
 }
