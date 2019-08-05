@@ -171,8 +171,11 @@ fetchminimalsync() {
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
         else
 		# We need minimal git pull if the folder really exists
-		cd "${PORTAGE_DIR}"
-		git pull --depth=1 origin master
+		pushd "${PORTAGE_DIR}" > /dev/null 2>&1
+			git pull --update-shallow
+			git pull --depth=1
+			git gc --prune=now
+		popd
 	fi
 
 	if [[ ! -d "/var/lib/layman/argent-ws/.git" ]] ; then
@@ -189,12 +192,16 @@ fetchminimalsync() {
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
 	else
 		pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1
-			git pull
+			git pull --update-shallow
+			git pull --depth=1
+			git gc --prune=now
 		popd
 	fi
 
 	pushd /opt/argentws-build/ > /dev/null 2>&1
-		git pull
+		git pull --update-shallow
+		git pull --depth=1
+		git gc --prune=now
 	popd
 
 }
