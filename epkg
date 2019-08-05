@@ -154,18 +154,14 @@ case "$action" in
 		emerge --depclean -q
 		;;
 	autobuildpkgonly)
-			secondoption=$1
-			shift
-			case "$secondoption" in
-			--skip-update)
-				autobuildpkgonly "$@"
-				;;
-			*)
+			if [ "$1" != "--skip-update" ] ; then
 				argentsync
 				cleanoutdated
 				autobuildpkgonly "$@"
-				;;
-			esac
+			else
+				shift
+				autobuildpkgonly "$@"
+			fi
 		;;
 	autoupgrade)
 		fetchminimalsync
