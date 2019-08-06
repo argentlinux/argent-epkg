@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# generic Argent variables
 export ADD_OPTS="${ADD_OPTS:-}"
 
 export local ENABLE_COLOR="\e[1;49;34m"
@@ -9,6 +10,9 @@ export local PORTAGE_DIR="/usr/portage/"
 
 # import gentoo functions
 source /lib/gentoo/functions.sh
+
+# generic gentoo variables
+export PORTAGE_GROUP="${PORTAGE_GROUP:-portage}"
 
 checkroot () {
 	if [[ "$(whoami)" != root ]] ; then
@@ -135,6 +139,67 @@ syncrepos () {
 	fi
 
 	emerge --sync
+}
+
+set_var_cache_dir () {
+	export local COLOR_ON="\e[1;49;34m"
+	export local COLOR_OFF="\e[0m"
+
+	if [ -e "/etc/portage/make.conf" ] ; then
+		. /etc/portage/make.conf
+		unset PKGDIR
+		export PKGDIR="${PKGDIR:-$(cat /etc/portage/make.conf | grep 'PKGDIR=' | cut -d '"' -f2)}"
+		unset DISTDIR
+		export PKGDIR="${DISTDIR:-$(cat /etc/portage/make.conf | grep 'DISTDIR=' | cut -d '"' -f2)}"
+		unset PORTAGE_GROUP
+		export PORTAGE_GROUP="${PORTAGE_GROUP:-$(cat /etc/portage/make.conf | grep 'PORTAGE_GROUP=' | cut -d '"' -f2)}"
+        else
+		eerror "The file does not match the pattern of environment script"
+		echo "Please consider using avasile to change to one of the modes"
+		echo "avasile --help"
+	fi
+
+	echo " "
+
+	if [ ! -e "${PKGDIR}"  ] ; then
+		mkdir -p "${PKGDIR}"
+		if [ $( stat -c "%G" "${PKGDIR}" ) != "${PORTAGE_GROUP}" ] ; then
+			eerror "Please make sure you set $PKGDIR ownership to $PORTAGE_GROUP"
+			echo " "
+			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
+			echo " "
+			eerror "You can safely cancel now, and run the blue command from above"
+			echo " "
+		fi
+	else
+                if [ $( stat -c "%G" "${PKGDIR}" ) != "${PORTAGE_GROUP}" ] ; then
+			eerror "Please make sure you set $PKGDIR ownership to $PORTAGE_GROUP"
+			echo " "
+			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
+			echo " "
+			eerror "You can safely cancel now, and run the blue command from above"
+			echo " "
+                fi
+	fi
+
+	if [ ! -e "${DISTDIR}"  ] ; then
+		mkdir -p "${DISTDIR}"
+		if [ $( stat -c "%G" "${DISTDIR}" ) != "${PORTAGE_GROUP}" ] ; then
+			eerror "Please make sure you set $DISTDIR ownership to $PORTAGE_GROUP"
+			echo " "
+			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
+			echo " "
+		fi
+	else
+                if [ $( stat -c "%G" "${DISTDIR}" ) != "${PORTAGE_GROUP}" ] ; then
+			eerror "Please make sure you set $DISTDIR ownership to $PORTAGE_GROUP"
+			echo " "
+			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
+			echo " "
+			eerror "You can safely cancel now, and run the blue command(s) from above"
+			echo " "
+                fi
+	fi
 }
 
 forcesync () {

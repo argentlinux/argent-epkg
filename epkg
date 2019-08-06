@@ -60,9 +60,11 @@ case "$action" in
 	upgrade)
 		if [ "$1" != "--skip-check" ] ; then
 			checksync
+			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 			emerge -uDvaN @system @world "$@" --backtrack=150
 		else
 			shift
+			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 			emerge -uDvaN @system @world "$@" --backtrack=150
 		fi
 		;;
@@ -191,6 +193,7 @@ case "$action" in
 		emerge -s "$@"
 		;;
 	update)
+		PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 		fetchminimalsync
 		;;
 	devsync)
