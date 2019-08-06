@@ -163,7 +163,6 @@ set_var_cache_dir () {
 
 	if [ ! -e "${PKGDIR}"  ] ; then
 		mkdir -p "${PKGDIR}"
-		chmod 775 "${PKGDIR}"
 		if [ $( stat -c "%G" "${PKGDIR}" ) != "${PORTAGE_GROUP}" ] ; then
 			eerror "Please make sure you set $PKGDIR ownership to $PORTAGE_GROUP"
 			echo " "
@@ -173,7 +172,6 @@ set_var_cache_dir () {
 			echo " "
 		fi
 	else
-		chmod 775 "${PKGDIR}"
                 if [ $( stat -c "%G" "${PKGDIR}" ) != "${PORTAGE_GROUP}" ] ; then
 			eerror "Please make sure you set $PKGDIR ownership to $PORTAGE_GROUP"
 			echo " "
