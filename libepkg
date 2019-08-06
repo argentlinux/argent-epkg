@@ -150,7 +150,7 @@ set_var_cache_dir () {
 		unset PKGDIR
 		export PKGDIR="${PKGDIR:-$(cat /etc/portage/make.conf | grep 'PKGDIR=' | cut -d '"' -f2)}"
 		unset DISTDIR
-		export PKGDIR="${DISTDIR:-$(cat /etc/portage/make.conf | grep 'DISTDIR=' | cut -d '"' -f2)}"
+		export DISTDIR="${DISTDIR:-$(cat /etc/portage/make.conf | grep 'DISTDIR=' | cut -d '"' -f2)}"
 		unset PORTAGE_GROUP
 		export PORTAGE_GROUP="${PORTAGE_GROUP:-$(cat /etc/portage/make.conf | grep 'PORTAGE_GROUP=' | cut -d '"' -f2)}"
         else
@@ -163,6 +163,7 @@ set_var_cache_dir () {
 
 	if [ ! -e "${PKGDIR}"  ] ; then
 		mkdir -p "${PKGDIR}"
+		chmod 775 "${PKGDIR}"
 		if [ $( stat -c "%G" "${PKGDIR}" ) != "${PORTAGE_GROUP}" ] ; then
 			eerror "Please make sure you set $PKGDIR ownership to $PORTAGE_GROUP"
 			echo " "
@@ -184,6 +185,7 @@ set_var_cache_dir () {
 
 	if [ ! -e "${DISTDIR}"  ] ; then
 		mkdir -p "${DISTDIR}"
+		chmod 775 "${DISTDIR}"
 		if [ $( stat -c "%G" "${DISTDIR}" ) != "${PORTAGE_GROUP}" ] ; then
 			eerror "Please make sure you set $DISTDIR ownership to $PORTAGE_GROUP"
 			echo " "
