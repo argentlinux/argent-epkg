@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /usr/lib/epkg/libepkg
+source /usr/lib64/epkg/libepkg
 
 checkroot
 checksystemmode
