@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+source /etc/portage/make.conf
+
 # generic Argent variables
 export ADD_OPTS="${ADD_OPTS:-}"
 
 export local ENABLE_COLOR="\e[1;49;34m"
 export local DISABLE_COLOR="\e[0m"
 
-export local PORTAGE_DIR="/usr/portage/"
+export local PORTAGE_DIR="${PORTDIR}"
 
 # import gentoo functions
 source /lib/gentoo/functions.sh
@@ -53,7 +55,7 @@ checkportageconfig () {
 checkportagetree () {
 	# running update on gentoo snapshotted overlay
 
-	pushd /usr/portage > /dev/null 2>&1
+	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
 	git remote update > /dev/null 2>&1
 
 	export local treehash=$(git rev-parse @)
