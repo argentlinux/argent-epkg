@@ -173,36 +173,16 @@ set_var_cache_dir () {
 			eerror "You can safely cancel now, and run the blue command from above"
 			echo " "
 		fi
-	else
-                if [ $( stat -c "%G" "${PKGDIR}" ) != "${PORTAGE_GROUP}" ] ; then
-			eerror "Please make sure you set $PKGDIR ownership to $PORTAGE_GROUP"
-			echo " "
-			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
-			echo " "
-			eerror "You can safely cancel now, and run the blue command from above"
-			echo " "
-                fi
 	fi
 
 	if [ ! -e "${DISTDIR}"  ] ; then
 		mkdir -p "${DISTDIR}"
-		chmod 775 "${DISTDIR}"
 		if [ $( stat -c "%G" "${DISTDIR}" ) != "${PORTAGE_GROUP}" ] ; then
 			eerror "Please make sure you set $DISTDIR ownership to $PORTAGE_GROUP"
 			echo " "
 			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
 			echo " "
 		fi
-	else
-		chmod 775 "${DISTDIR}"
-                if [ $( stat -c "%G" "${DISTDIR}" ) != "${PORTAGE_GROUP}" ] ; then
-			eerror "Please make sure you set $DISTDIR ownership to $PORTAGE_GROUP"
-			echo " "
-			eerror "Run command: "$COLOR_ON"chgrp $PORTAGE_GROUP {${PKGDIR},${DISTDIR}} "$COLOR_OFF""
-			echo " "
-			eerror "You can safely cancel now, and run the blue command(s) from above"
-			echo " "
-                fi
 	fi
 }
 
