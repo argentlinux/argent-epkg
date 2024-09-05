@@ -16,7 +16,7 @@ source /lib/gentoo/functions.sh
 # generic gentoo variables
 export PORTAGE_GROUP="${PORTAGE_GROUP:-portage}"
 
-checkroot () {
+checkroot() {
 	if [[ "$(whoami)" != root ]] ; then
 		eerror "You're not root?...No cookies for you, go away !!!"
 		exit 1
@@ -30,7 +30,7 @@ checksystemmode() {
 	fi
 }
 
-checkportageconfig () {
+checkportageconfig() {
 	# running update on argent specific gentoo settings
 
 	pushd /opt/argentws-build > /dev/null 2>&1
@@ -52,7 +52,7 @@ checkportageconfig () {
 	popd > /dev/null 2>&1
 }
 
-checkportagetree () {
+checkportagetree() {
 	# running update on gentoo snapshotted overlay
 
 	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
@@ -67,7 +67,7 @@ checkportagetree () {
 	popd > /dev/null 2>&1
 }
 
-checkargentoverlay () {
+checkargentoverlay() {
 	# running update on argent gentoo overlay
 
 	pushd /var/lib/layman/argent-ws > /dev/null 2>&1
@@ -79,7 +79,7 @@ checkargentoverlay () {
 	fi
 }
 
-checkmakeconf () {
+checkmakeconf() {
 	# function checking the existence and validity of make.conf
 	# in accordance wih gentoo and argentws-build standard
 
@@ -94,7 +94,7 @@ checkmakeconf () {
         fi
 }
 
-checkportdir () {
+checkportdir() {
 	# function to check the existence of portage and argent/portage.git independent dirs:
 	# distfiles and packages
 
@@ -129,13 +129,13 @@ checkportdir () {
         fi
 }
 
-checksync () {
+checksync() {
 	checkportagetree
 	checkargentoverlay
 	checkportageconfig
 }
 
-syncrepos () {
+syncrepos() {
 	if [[ -e "/etc/portage/repos.conf/layman.conf" ]] && [[ "$(cat /etc/portage/repos.conf/layman.conf | grep argent-ws )" ]] ; then
 		sed -i 's|auto-sync = No|auto-sync = yes|g' /etc/portage/repos.conf/layman.conf
 	fi
@@ -143,7 +143,7 @@ syncrepos () {
 	emerge --sync
 }
 
-set_var_cache_dir () {
+set_var_cache_dir() {
 	export local COLOR_ON="\e[1;49;34m"
 	export local COLOR_OFF="\e[0m"
 
@@ -186,7 +186,7 @@ set_var_cache_dir () {
 	fi
 }
 
-forcesync () {
+forcesync() {
 	# Full update, everything caught in history
 	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
 	git pull --unshallow
@@ -255,7 +255,7 @@ fetchminimalsync() {
 
 }
 
-backuppkg () {
+backuppkg() {
 	# function to provide backup packages with own configurations
 
 	# a forenote: although if you run usermode or devmode, the installing packages will already be saved
@@ -298,7 +298,7 @@ backuppkg () {
 	env-update && source /etc/profile
 }
 
-backupallpkg () {
+backupallpkg() {
 	# function to *backup all packages in the system* for future use
 
 	# the unconventional way here: we import /etc/portage/make.conf into current local function
@@ -342,7 +342,7 @@ backupallpkg () {
 	env-update && source /etc/profile
 }
 
-cleanoutdated () {
+cleanoutdated() {
 	# function designed to clearout any outdated package using gentoolkit
 
 	# the unconventional way here: we import /etc/portage/make.conf into current local function
@@ -365,7 +365,7 @@ cleanoutdated () {
 	env-update && source /etc/profile
 }
 
-cleanlocalpkg () {
+cleanlocalpkg() {
         # the unconventional way here: we import /etc/portage/make.conf into current local function
 
 	checkmakeconf
@@ -388,7 +388,7 @@ cleanlocalpkg () {
 	env-update && source /etc/profile
 }
 
-src-newuse () {
+src-newuse() {
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
                 eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
                 eerror "If you continue, you continue on your own risk!"
@@ -399,7 +399,7 @@ src-newuse () {
         fi
 }
 
-recompilepkg () {
+recompilepkg() {
 	# function to call a recompile of a package and save it to ${PKGDIR}"
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -412,7 +412,7 @@ recompilepkg () {
 	fi
 }
 
-recompileallpkg () {
+recompileallpkg() {
 	# function to recompile everything on the system and also saving all the recompiled packages. Usually in /usr/portage/packages
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -428,7 +428,7 @@ recompileallpkg () {
 	fi
 }
 
-autorecompilepkg () {
+autorecompilepkg() {
 
     # function to call a recompile of a package and save it to ${PKGDIR}"
 
@@ -443,7 +443,7 @@ autorecompilepkg () {
 
 }
 
-autorecompileallpkg () {
+autorecompileallpkg() {
     # function to recompile everything on the system and also saving all the recompiled packages. Usually in /usr/portage/packages
 
     if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -454,7 +454,7 @@ autorecompileallpkg () {
     fi
 }
 
-recompile-depend () {
+recompile-depend() {
         # function to recompile all the packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -482,7 +482,7 @@ recompile-depend () {
 
 }
 
-recompile-depend-new () {
+recompile-depend-new() {
         # function to recompile all the new packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -510,7 +510,7 @@ recompile-depend-new () {
 
 }
 
-autorecompile-depend () {
+autorecompile-depend() {
         # function to recompile all the packages that directly depend on this package with no confirmation
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -538,7 +538,7 @@ autorecompile-depend () {
 
 }
 
-autorecompile-depend-new () {
+autorecompile-depend-new() {
         # function to recompile all the new packages that directly depend on this package with no confirmation
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -566,7 +566,7 @@ autorecompile-depend-new () {
 
 }
 
-reinstall-depend () {
+reinstall-depend() {
         # function to recompile all new packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -586,7 +586,7 @@ reinstall-depend () {
 
 }
 
-autoreinstall-depend () {
+autoreinstall-depend() {
         # function to recompile all new packages that directly depend on this package
 
         if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -606,7 +606,7 @@ autoreinstall-depend () {
 
 }
 
-fetchsourcepkg () {
+fetchsourcepkg() {
 	# function to download the source of the program for development / patching purposes
 
 
@@ -629,7 +629,7 @@ fetchsourcepkg () {
 	env-update && source /etc/profile
 }
 
-fetchbinpkg () {
+fetchbinpkg() {
         # function to download the source of the program for development / patching purposes
 
 
@@ -652,7 +652,7 @@ fetchbinpkg () {
         env-update && source /etc/profile
 }
 
-remove-orphans () {
+remove-orphans() {
 	# The function calls 'emerge --depclean -a' which removes orphaned packages
 	# Probably the most successful emerge algorythm ever made
 	checkmakeconf
@@ -661,7 +661,7 @@ remove-orphans () {
 
 }
 
-buildinstall () {
+buildinstall() {
 	# Stands for build ( -Bv ) and install ( -va with --getbinpkg )
 	# Also regenerates the binhost Packages file
         if [[ -z "$@" ]] ; then
@@ -685,7 +685,7 @@ buildinstall () {
         env-update && source /etc/profile
 }
 
-autobuildinstall () {
+autobuildinstall() {
         # Stands for build ( -Bv ) and install ( -va with --getbinpkg ) automatically
 	# Also regenerates the binhost Packages file
 
@@ -710,7 +710,7 @@ autobuildinstall () {
         env-update && source /etc/profile
 }
 
-buildpkgonly () {
+buildpkgonly() {
 	# function to only build 1 or more packages based on input
 
 	# should work as: epkg buildpkg-only <something>
@@ -728,7 +728,7 @@ buildpkgonly () {
         env-update && source /etc/profile
 }
 
-autobuildpkgonly () {
+autobuildpkgonly() {
         # function to only build 1 or more packages based on input
 
         # should work as: epkg buildpkg-only <something>
@@ -746,7 +746,7 @@ autobuildpkgonly () {
         env-update && source /etc/profile
 }
 
-syncportageconfig () {
+syncportageconfig() {
 	# syncing with the latest updates on our argent gentoo configs
 
 	pushd /opt/argentws-build > /dev/null 2>&1
@@ -769,7 +769,7 @@ syncportageconfig () {
 	popd > /dev/null 2>&1
 }
 
-argentsync () {
+argentsync() {
 	syncrepos
 	syncportageconfig
 }
