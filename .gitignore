@@ -1,1 +1,4 @@
 .idea
+/cmd/epkg/epkg
+epkg-go
+logs
