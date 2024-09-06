@@ -81,9 +81,14 @@ case "$action" in
                 FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
                 ;;
 	autoinstall)
-		fetchminimalsync
-		emerge -v "$@"
-		;;
+		if [ "$1" != "--skip-check" ] ; then
+                        fetchminimalsync
+                        emerge -v "$@"
+                else
+                        shift
+                        emerge -v "$@"
+                fi
+                ;;
 	autoinstall-no-collision)
 		fetchminimalsync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -v "$@"
