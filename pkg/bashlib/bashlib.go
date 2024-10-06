@@ -25,3 +25,8 @@ func RunGentooQuery() (string, error) {
 	command := "qlist -Iv"
 	return RunBashCommand(command)
 }
+
+func RunArgentSearch() string {
+	command := "epkg search"
+	return command
+}

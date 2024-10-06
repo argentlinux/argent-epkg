@@ -1,4 +1,5 @@
 .idea
 /cmd/epkg/epkg
+ep
 epkg-go
 logs

@@ -31,21 +31,38 @@ func CreateAppLayout(w fyne.Window) fyne.CanvasObject {
 			fmt.Sprintf("Do you want to install %s?", appName),
 			func(confirm bool) {
 				if confirm {
-					output, err := search.RunSearch("epkg autoinstall --skip-check " + appName)
-					if err != nil {
-						// without these scrolls right here, the UI would be even more terrible than it is
-						scrollableOutput := widget.NewLabel(output)
-						scrollContainer := container.NewVScroll(scrollableOutput)
-						scrollContainer.SetMinSize(fyne.NewSize(400, 300))
-						customDialog := dialog.NewCustom("Installation Failed", "Close", scrollContainer, w)
-						customDialog.Show()
-					} else {
-						scrollableOutput := widget.NewLabel(output)
-						scrollContainer := container.NewVScroll(scrollableOutput)
-						scrollContainer.SetMinSize(fyne.NewSize(400, 300))
-						customDialog := dialog.NewCustom("Installation Output", "Close", scrollContainer, w)
-						customDialog.Show()
-					}
+					// Create a progress dialog before running the command
+					progressLabel := widget.NewLabel("Installing...")
+					scrollContainer := container.NewVScroll(progressLabel)
+					scrollContainer.SetMinSize(fyne.NewSize(400, 300))
+					progressDialog := dialog.NewCustom("Installation in Progress", "Cancel", scrollContainer, w)
+					progressDialog.Show()
+
+					go func() {
+						//output, err := search.RunSearch("epkg autoinstall --skip-check " + appName)
+						output, err := search.RunSearch("emerge --info " + appName)
+						//cmd := exec.Command("bash", "-c", "emerge --info")
+						defer fyne.CurrentApp().SendNotification(&fyne.Notification{
+							Title:   "EPKG Installation",
+							Content: fmt.Sprintf("Installation of %s finished", appName),
+						})
+
+						progressDialog.Hide()
+
+						if err != nil {
+							errorLabel := widget.NewLabel(output)
+							errorScrollContainer := container.NewVScroll(errorLabel)
+							errorScrollContainer.SetMinSize(fyne.NewSize(400, 300))
+							errorDialog := dialog.NewCustom("Installation Failed", "Close", errorScrollContainer, w)
+							errorDialog.Show()
+						} else {
+							successLabel := widget.NewLabel(output)
+							successScrollContainer := container.NewVScroll(successLabel)
+							successScrollContainer.SetMinSize(fyne.NewSize(400, 300))
+							successDialog := dialog.NewCustom("Installation Output", "Close", successScrollContainer, w)
+							successDialog.Show()
+						}
+					}()
 				}
 			}, w)
 		confirmDialog.Show()
