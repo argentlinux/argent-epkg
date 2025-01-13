@@ -443,30 +443,44 @@ autorecompileallpkg() {
 }
 
 recompile-depend() {
-	# function to recompile all the packages that directly depend on this package
+    # function to recompile all the packages that directly depend on this package
 
-	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		eerror "If you continue, you continue at your own risk!"
-		sleep 3
-		cat /dev/null > /tmp/epkg_temporary_list
-		equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $( cat /tmp/epkg_temporary_list )
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	else
-		cat /dev/null > /tmp/epkg_temporary_list
-		equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $( cat /tmp/epkg_temporary_list )
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	fi
+    local exclude_packages=()
+    local args=("$@")
+    local new_args=()
+
+    # Check for --exclude argument
+    for ((i = 0; i < ${#args[@]}; i++)); do
+        if [[ "${args[i]}" == "--exclude" ]]; then
+            while [[ $((i + 1)) -lt ${#args[@]} && "${args[i + 1]}" != --* ]]; do
+                exclude_packages+=("${args[i + 1]}")
+                i=$((i + 1))
+            done
+        else
+            new_args+=("${args[i]}")
+        fi
+    done
+
+    if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]]; then
+        eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+        eerror "If you continue, you continue at your own risk!"
+        sleep 3
+    fi
+
+    cat /dev/null > /tmp/epkg_temporary_list
+    equery d "${new_args[@]}" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+
+    if [[ -s "/tmp/epkg_temporary_list" ]]; then
+        local exclude_str=""
+        if [[ ${#exclude_packages[@]} -gt 0 ]]; then
+            exclude_str="--exclude $(IFS=,; echo "${exclude_packages[*]}")"
+        fi
+        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $(cat /tmp/epkg_temporary_list) $exclude_str
+    else
+        echo "There are no packages that depend on given package(s)"
+    fi
+
+    rm -f /tmp/epkg_temporary_list || exit 1
 }
 
 recompile-depend-new() {
@@ -497,30 +511,44 @@ recompile-depend-new() {
 }
 
 autorecompile-depend() {
-	# function to recompile all the packages that directly depend on this package with no confirmation
+    # function to recompile all the packages that directly depend on this package with no confirmation
 
-	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		eerror "If you continue, you continue at your own risk!"
-		sleep 3
-		cat /dev/null > /tmp/epkg_temporary_list
-		equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v --oneshot --keep-going $( cat /tmp/epkg_temporary_list ) --keep-going
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	else
-		cat /dev/null > /tmp/epkg_temporary_list
-		equery d "$@" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v --oneshot --keep-going $( cat /tmp/epkg_temporary_list ) --keep-going
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	fi
+    local exclude_packages=()
+    local args=("$@")
+    local new_args=()
+
+    # Check for --exclude argument
+    for ((i = 0; i < ${#args[@]}; i++)); do
+        if [[ "${args[i]}" == "--exclude" ]]; then
+            while [[ $((i + 1)) -lt ${#args[@]} && "${args[i + 1]}" != --* ]]; do
+                exclude_packages+=("${args[i + 1]}")
+                i=$((i + 1))
+            done
+        else
+            new_args+=("${args[i]}")
+        fi
+    done
+
+    if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]]; then
+        eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+        eerror "If you continue, you continue at your own risk!"
+        sleep 3
+    fi
+
+    cat /dev/null > /tmp/epkg_temporary_list
+    equery d "${new_args[@]}" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+
+    if [[ -s "/tmp/epkg_temporary_list" ]]; then
+        local exclude_str=""
+        if [[ ${#exclude_packages[@]} -gt 0 ]]; then
+            exclude_str="--exclude $(IFS=,; echo "${exclude_packages[*]}")"
+        fi
+        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v --oneshot --keep-going $(cat /tmp/epkg_temporary_list) $exclude_str
+    else
+        echo "There are no packages that depend on given package(s)"
+    fi
+
+    rm -f /tmp/epkg_temporary_list || exit 1
 }
 
 autorecompile-depend-new() {
