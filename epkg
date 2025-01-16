@@ -35,15 +35,15 @@ case "$action" in
 			emerge --depclean -av "$@"
 		fi
 		;;
-  configure)
-    if [ "$1" != "--skip-check" ] ; then
-      checksync
-      emerge --config "$@"
-    else
-      shift
-      emerge --config "$@"
-    fi
-    ;;
+	configure)
+		if [ "$1" != "--skip-check" ] ; then
+		checksync
+		emerge --config "$@"
+		else
+		shift
+		emerge --config "$@"
+		fi
+		;;
 	backuppkg)
 		PKGDIR="${PKGDIR:-}" backuppkg "$@"
 		;;
