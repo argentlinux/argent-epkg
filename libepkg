@@ -5,7 +5,8 @@ source /etc/portage/make.conf
 # generic Argent variables
 export ADD_OPTS="${ADD_OPTS:-}"
 
-export GENTOO_DISTRO="${GENTOO_DISTRO:-argent}"
+# export function for other gentoo distributions to use
+export EPKG_DISTRO_SET="${GENTOO_DISTRO}"
 
 export local ENABLE_COLOR="\e[1;49;34m"
 export local DISABLE_COLOR="\e[0m"
@@ -131,7 +132,7 @@ checkportdir() {
 }
 
 checksync() {
-    if [[ "${GENTOO_DISTRO}" == "argent" ]]; then
+    if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
         if [ -d "/etc/portage/.git" ]; then
             checkportagetree
         else
