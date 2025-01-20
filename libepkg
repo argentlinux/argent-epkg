@@ -793,6 +793,9 @@ syncportageconfig() {
 }
 
 argentsync() {
-	syncrepos
-	syncportageconfig
+	if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+		syncrepos
+		syncportageconfig
+	fi
+	echo ""
 }

@@ -116,10 +116,10 @@ case "$action" in
 	backupallpkg)
 		PKGDIR="${PKGDIR:-}" backupallpkg $( qlist -IvC ) "$@"
 		;;
-	recompilepkg)
+	recompile)
 		recompilepkg "$@"
 		;;
-	recompile)
+	recompilepkg)
 		recompilepkg "$@"
 		;;
 	recompileallpkg)
