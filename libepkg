@@ -13,7 +13,7 @@ export local DISABLE_COLOR="\e[0m"
 export local PORTAGE_DIR="${PORTDIR}"
 export local ARGENT_OVERLAY="/var/lib/layman/argent-ws"
 
-# import gentoo functions
+# import gentoo functions, this has not been ported to lib64 yet
 source /lib/gentoo/functions.sh
 
 # generic gentoo variables
