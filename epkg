@@ -119,6 +119,9 @@ case "$action" in
 	recompilepkg)
 		recompilepkg "$@"
 		;;
+	recompile)
+		recompilepkg "$@"
+		;;
 	recompileallpkg)
 		argentsync
 		cleanoutdated
@@ -144,6 +147,10 @@ case "$action" in
 		;;
 	autoreinstall-depend)
 		autoreinstall-depend "$@"
+		;;
+	autorecompile)
+		argentsync
+		autorecompilepkg "$@"
 		;;
 	autorecompilepkg)
 		argentsync
@@ -253,6 +260,7 @@ case "$action" in
 				devsync - Upgrade all Portage overlay structure with needed ebuilds for development / compilation
 
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
+				recompile - Recompile and install packages with self-defined options ( man portage )
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
 				recompile-depend - Compile/Recompile all currently installed packages that depend on given package(s)
@@ -266,6 +274,7 @@ case "$action" in
 				autoupgrade-specific - Upgrade specific package(s) ( no confirmation )
 
 				autoreinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision ( no confirmation )
+				autorecompile - Recompile packages with self-defined options ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
 				autorecompile-depend - Compile/Recompile all currently installed packages that depend on given package(s) ( no confirmation )
