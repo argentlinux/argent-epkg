@@ -225,7 +225,7 @@ case "$action" in
 
 			epkg is a simple wrapper around portage, gentoolkit, and portage-utils that provides an
 			apt-get/yum-alike interface to these commands, to assist people transitioning from
-			Debian/RedHat-based systems to Gentoo.
+			Debian/RedHat-based systems to Gentoo. It is a fork of unmaintained github.com/jdhore/epkg.
 
 			Commands :
 				install - Install new packages

@@ -5,10 +5,13 @@ source /etc/portage/make.conf
 # generic Argent variables
 export ADD_OPTS="${ADD_OPTS:-}"
 
+export GENTOO_DISTRO="${GENTOO_DISTRO:-argent}"
+
 export local ENABLE_COLOR="\e[1;49;34m"
 export local DISABLE_COLOR="\e[0m"
 
 export local PORTAGE_DIR="${PORTDIR}"
+export local ARGENT_OVERLAY="/var/lib/layman/argent-ws"
 
 # import gentoo functions
 source /lib/gentoo/functions.sh
@@ -128,9 +131,21 @@ checkportdir() {
 }
 
 checksync() {
-	checkportagetree
-	checkargentoverlay
-	checkportageconfig
+    if [[ "${GENTOO_DISTRO}" == "argent" ]]; then
+        if [ -d "/etc/portage/.git" ]; then
+            checkportagetree
+        else
+			ewarn "No portage tree found, you should fetch minimal portage tree via epkg update"
+		fi
+        if [ -d "$ARGENT_OVERLAY/.git" ]; then
+            checkargentoverlay
+        else
+			ewarn "No argent overlay found, you eselect enable argent-ws or git clone it in:"
+			ewarn "either /var/lib/layman/ or /var/db/repos/"
+			ewarn "You also have the alternative to use the distro-reset command avasile --help"
+		fi
+        checkportageconfig
+    fi
 }
 
 syncrepos() {
