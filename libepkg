@@ -482,49 +482,57 @@ recompile-depend() {
         sleep 3
     fi
 
-    cat /dev/null > /tmp/epkg_temporary_list
-    equery d "${new_args[@]}" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+	# function to create a lock file in order to not be possibly overwritten by another epkg (auto) recompile-depend
+    local temp_list="/tmp/epkg_temporary_list"
+    exec 200>"$temp_list"
+    flock -n 200 || { echo "Failed to acquire lock on $temp_list"; exit 1; }
 
-    if [[ -s "/tmp/epkg_temporary_list" ]]; then
+    cat /dev/null > "$temp_list"
+    equery d "${new_args[@]}" | awk '{print $1}' | sed -e 's/^/=/' >> "$temp_list"
+
+    if [[ -s "$temp_list" ]]; then
         local exclude_str=""
         if [[ ${#exclude_packages[@]} -gt 0 ]]; then
             for pkg in "${exclude_packages[@]}"; do
                 exclude_str+="--exclude ${pkg} "
             done
         fi
-        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $(cat /tmp/epkg_temporary_list) $exclude_str
+        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $(cat "$temp_list") $exclude_str
     else
         echo "There are no packages that depend on given package(s)"
     fi
 
-    rm -f /tmp/epkg_temporary_list || exit 1
+    rm -f "$temp_list" || exit 1
+    flock -u 200
+    exec 200>&-
 }
 
 recompile-depend-new() {
-	# function to recompile all the new packages that directly depend on this package
+    # function to recompile all the new packages that directly depend on this package
 
-	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		eerror "If you continue, you continue at your own risk!"
-		sleep 3
-		cat /dev/null > /tmp/epkg_temporary_list
-		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $( cat /tmp/epkg_temporary_list )
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	else
-		cat /dev/null > /tmp/epkg_temporary_list
-		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $( cat /tmp/epkg_temporary_list )
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	fi
+    if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+        eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+        eerror "If you continue, you continue at your own risk!"
+        sleep 3
+    fi
+
+	# function to create a lock file in order to not be possibly overwritten by another epkg (auto) recompile-depend
+    local temp_list="/tmp/epkg_temporary_list"
+    exec 200>"$temp_list"
+    flock -n 200 || { echo "Failed to acquire lock on $temp_list"; exit 1; }
+
+    cat /dev/null > "$temp_list"
+    for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> "$temp_list" ; done
+
+    if [[ -s "$temp_list" ]] ; then
+        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge --oneshot -va --keep-going $(cat "$temp_list")
+    else
+        echo "There are no packages that depend on given package(s)"
+    fi
+
+    rm -f "$temp_list" || exit 1
+    flock -u 200
+    exec 200>&-
 }
 
 autorecompile-depend() {
@@ -551,53 +559,62 @@ autorecompile-depend() {
         sleep 3
     fi
 
-    cat /dev/null > /tmp/epkg_temporary_list
-    equery d "${new_args[@]}" | awk '{print $1}' | sed -e 's/^/=/' >> /tmp/epkg_temporary_list
+	# function to create a lock file in order to not be possibly overwritten by another epkg (auto) recompile-depend
+    local temp_list="/tmp/epkg_temporary_list"
+    exec 200>"$temp_list"
+    flock -n 200 || { echo "Failed to acquire lock on $temp_list"; exit 1; }
 
-    if [[ -s "/tmp/epkg_temporary_list" ]]; then
+    cat /dev/null > "$temp_list"
+    equery d "${new_args[@]}" | awk '{print $1}' | sed -e 's/^/=/' >> "$temp_list"
+
+    if [[ -s "$temp_list" ]]; then
         local exclude_str=""
         if [[ ${#exclude_packages[@]} -gt 0 ]]; then
             for pkg in "${exclude_packages[@]}"; do
                 exclude_str+="--exclude ${pkg} "
             done
         fi
-        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v --oneshot --keep-going $(cat /tmp/epkg_temporary_list) $exclude_str
+        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v --oneshot --keep-going $(cat "$temp_list") $exclude_str
     else
         echo "There are no packages that depend on given package(s)"
     fi
 
-    rm -f /tmp/epkg_temporary_list || exit 1
+    rm -f "$temp_list" || exit 1
+    flock -u 200
+    exec 200>&-
 }
 
 autorecompile-depend-new() {
-	# function to recompile all the new packages that directly depend on this package with no confirmation
+    # function to recompile all the new packages that directly depend on this package with no confirmation
 
-	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
-		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
-		eerror "If you continue, you continue at your own risk!"
-		sleep 3
-		cat /dev/null > /tmp/epkg_temporary_list
-		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	else
-		cat /dev/null > /tmp/epkg_temporary_list
-		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
-		if [[ -s "/tmp/epkg_temporary_list" ]] ; then
-			EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $( cat /tmp/epkg_temporary_list )
-		else
-			echo "There are no packages that depend on given package(s)"
-		fi
-		rm -f /tmp/epkg_temporary_list || exit 1
-	fi
+    if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+        eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+        eerror "If you continue, you continue at your own risk!"
+        sleep 3
+    fi
+
+	# function to create a lock file in order to not be possibly overwritten by another epkg (auto) recompile-depend
+    local temp_list="/tmp/epkg_temporary_list"
+    exec 200>"$temp_list"
+    flock -n 200 || { echo "Failed to acquire lock on $temp_list"; exit 1; }
+
+    cat /dev/null > "$temp_list"
+    for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> "$temp_list" ; done
+
+    if [[ -s "$temp_list" ]] ; then
+        EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v $(cat "$temp_list")
+    else
+        echo "There are no packages that depend on given package(s)"
+    fi
+
+    rm -f "$temp_list" || exit 1
+    flock -u 200
+    exec 200>&-
 }
 
+# soon to be rewritten / deprecated
 reinstall-depend() {
-	# function to recompile all new packages that directly depend on this package
+	# function to reinstall (?) all new packages that directly depend on this package
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
