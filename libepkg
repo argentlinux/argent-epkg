@@ -133,7 +133,7 @@ checkportdir() {
 
 checksync() {
     if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
-        if [ -d "/etc/portage/.git" ]; then
+        if [ -d "/opt/argentws-build/.git" ]; then
             checkportagetree
         else
 			ewarn "No portage tree found, you should fetch minimal portage tree via epkg update"
@@ -141,7 +141,7 @@ checksync() {
         if [ -d "$ARGENT_OVERLAY/.git" ]; then
             checkargentoverlay
         else
-			ewarn "No argent overlay found, you eselect enable argent-ws or git clone it in:"
+			ewarn "No argent overlay found, you must eselect enable argent-ws or git clone it in:"
 			ewarn "either /var/lib/layman/ or /var/db/repos/"
 			ewarn "You also have the alternative to use the distro-reset command avasile --help"
 		fi
