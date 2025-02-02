@@ -226,6 +226,9 @@ case "$action" in
 	sysinfo)
 		emerge --info
 		;;
+	resume)
+		emerge --resume -v1
+		;;
 	*)
 		cat <<-"EOH"
 			Usage: epkg command [package(s)]
@@ -291,6 +294,7 @@ case "$action" in
 				search - Search for packages
 				update - Resync portage tree, portage config && argent-ws overlay
 				sysinfo - Display information about installed core packages and portage configuration
+				resume - Resume the last failed emerge operation(s)
 		EOH
 		;;
 esac
