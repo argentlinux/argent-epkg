@@ -229,6 +229,9 @@ case "$action" in
 	resume)
 		emerge --resume -v1
 		;;
+	oneshot)
+		emerge --oneshot -va1 "$@"
+		;;
 	*)
 		cat <<-"EOH"
 			Usage: epkg command [package(s)]
@@ -295,6 +298,7 @@ case "$action" in
 				update - Resync portage tree, portage config && argent-ws overlay
 				sysinfo - Display information about installed core packages and portage configuration
 				resume - Resume the last failed emerge operation(s)
+				oneshot - Install package(s) as one-shot package(s)
 		EOH
 		;;
 esac
