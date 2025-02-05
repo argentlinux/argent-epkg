@@ -70,11 +70,11 @@ case "$action" in
 		if [ "$1" != "--skip-check" ] ; then
 			checksync
 			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
-			emerge -uDvaN @system @world "$@" --backtrack=150
+			emerge -uDvaN @system @world "$@"
 		else
 			shift
 			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
-			emerge -uDvaN @system @world "$@" --backtrack=150
+			emerge -uDvaN @system @world "$@"
 		fi
 		;;
 	upgrade-full)
