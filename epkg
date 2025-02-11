@@ -91,23 +91,31 @@ case "$action" in
                 ;;
 	autoinstall)
 		if [ "$1" != "--skip-check" ] ; then
-                        fetchminimalsync
-                        emerge -v "$@"
-                else
-                        shift
-                        emerge -v "$@"
-                fi
-                ;;
+			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+				fetchminimalsync
+			fi
+			emerge -v "$@"
+		else
+			shift
+			emerge -v "$@"
+		fi
+		;;
 	autoinstall-no-collision)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -v "$@"
 		;;
 	autoinstall-bin-pkg)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -v "$@"
 		;;
 	autoremove)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		emerge --depclean -v "$@"
 		;;
 	reinstall-depend)
@@ -173,7 +181,9 @@ case "$action" in
 		emerge --unmerge -v "$@"
 		;;
 	autoclean)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		emerge --depclean -q
 		;;
 	autobuildpkgonly)
@@ -187,15 +197,21 @@ case "$action" in
 			fi
 		;;
 	autoupgrade)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		emerge -uDvN @system @world "$@"
 		;;
 	autoupgrade-full)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	autoupgrade-nocol)
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	upgrade-specific)
@@ -215,7 +231,9 @@ case "$action" in
 		;;
 	update)
 		PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
-		fetchminimalsync
+		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+			fetchminimalsync
+		fi
 		;;
 	devsync)
 		argentsync
