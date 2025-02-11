@@ -233,6 +233,8 @@ case "$action" in
 		PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
 			fetchminimalsync
+		else
+			emerge --sync
 		fi
 		;;
 	devsync)
