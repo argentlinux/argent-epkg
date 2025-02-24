@@ -8,11 +8,11 @@ export ADD_OPTS="${ADD_OPTS:-}"
 # export function for other gentoo distributions to use
 export EPKG_DISTRO_SET="${GENTOO_DISTRO}"
 
-export local ENABLE_COLOR="\e[1;49;34m"
-export local DISABLE_COLOR="\e[0m"
+export ENABLE_COLOR="\e[1;49;34m"
+export DISABLE_COLOR="\e[0m"
 
-export local PORTAGE_DIR="${PORTDIR}"
-export local ARGENT_OVERLAY="/var/lib/layman/argent-ws"
+export PORTAGE_DIR="${PORTDIR}"
+export ARGENT_OVERLAY="/var/lib/layman/argent-ws"
 
 # import gentoo functions, this has not been ported to lib64 yet
 source /lib/gentoo/functions.sh
@@ -37,17 +37,18 @@ checksystemmode() {
 checkportageconfig() {
 	# running update on argent specific gentoo settings
 
-	pushd /opt/argentws-build > /dev/null 2>&1
+	pushd /opt/argentws-build > /dev/null 2>&1 || return
 	git remote update > /dev/null 2>&1
 
-	export local CONFHASH=$(git rev-parse @)
-	export local RCONFHASH=$(git rev-parse @{u})
+	CONFHASH=$(git rev-parse @)
+	RCONFHASH=$(git rev-parse @{u})
 	
 	if [[ ! -e .git ]] ; then
 		echo -e ""
 		eerror "You do not have any connection with the Argent main server"
 		eerror "Establish a .git connection to the main Argent EPKG server"
-		eerror "Or use "$ENABLE_COLOR"avasile"$DISABLE_COLOR" to switch stance"
+		# shellcheck disable=SC2027
+		eerror "Or use ""$ENABLE_COLOR""avasile""$DISABLE_COLOR"" to switch stance"
 		eerror "Ignoring local changes."
 		echo -e ""
 	elif [ "${CONFHASH}" != "${RCONFHASH}" ] ; then
@@ -59,28 +60,30 @@ checkportageconfig() {
 checkportagetree() {
 	# running update on gentoo snapshotted overlay
 
-	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
+	pushd "${PORTAGE_DIR}" > /dev/null 2>&1 || return
 	git remote update > /dev/null 2>&1
 
-	export local TREEHASH=$(git rev-parse @)
-	export local RTREEHASH=$(git rev-parse @{u})
+	export TREEHASH=$(git rev-parse @)
+	export RTREEHASH=$(git rev-parse @{u})
 
 	if [ "${TREEHASH}" != "${RTREEHASH}" ] ; then
 		eerror "Argent portage tree is out of date, run "epkg update" first"
 	fi
-	popd > /dev/null 2>&1
+	popd > /dev/null 2>&1 || return
 }
 
 checkargentoverlay() {
 	# running update on argent gentoo overlay
 
-	pushd /var/lib/layman/argent-ws > /dev/null 2>&1
+	pushd /var/lib/layman/argent-ws > /dev/null 2>&1 || return
 	git remote update > /dev/null 2>&1
-	export local OVERLAYHASH=$(git rev-parse @)
-	export local ROVERLAYHASH=$(git rev-parse @{u})
+	export OVERLAYHASH=$(git rev-parse @)
+	export ROVERLAYHASH=$(git rev-parse @{u})
 	if [  "${OVERLAYHASH}" != "${ROVERLAYHASH}" ] ; then
 		eerror "Overlay argent-ws is out of date, run "epkg update" first"
 	fi
+
+	popd > /dev/null 2>&1 || return
 }
 
 checkmakeconf() {
@@ -158,8 +161,8 @@ syncrepos() {
 }
 
 set_var_cache_dir() {
-	export local COLOR_ON="\e[1;49;34m"
-	export local COLOR_OFF="\e[0m"
+	export COLOR_ON="\e[1;49;34m"
+	export COLOR_OFF="\e[0m"
 
 	if [ -e "/etc/portage/make.conf" ] ; then
 		. /etc/portage/make.conf
@@ -202,17 +205,17 @@ set_var_cache_dir() {
 
 forcesync() {
 	# Full update, everything caught in history
-	pushd "${PORTAGE_DIR}" > /dev/null 2>&1
+	pushd "${PORTAGE_DIR}" > /dev/null 2>&1 || return
 	git pull --unshallow
-	popd
+	popd || return
 
-	pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1
+	pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1 || return
 	git pull --unshallow
-	popd
+	popd || return
 
-	pushd /opt/argentws-build > /dev/null 2>&1
+	pushd /opt/argentws-build > /dev/null 2>&1 || return
 	git pull --unshallow
-	popd
+	popd || return
 }
 
 fetchminimalsync() {
@@ -234,11 +237,11 @@ fetchminimalsync() {
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
         else
 		# We need minimal git pull if the folder really exists
-		pushd "${PORTAGE_DIR}" > /dev/null 2>&1
+		pushd "${PORTAGE_DIR}" > /dev/null 2>&1 || return
 			git pull --update-shallow
 			git pull --depth=1
 			git gc --prune=now
-		popd
+		popd || return
 	fi
 
 	if [[ ! -d "/var/lib/layman/argent-ws/.git" ]] ; then
@@ -254,18 +257,18 @@ fetchminimalsync() {
                 git branch -u origin/master master
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
 	else
-		pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1
+		pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1 || return
 			git pull --update-shallow
 			git pull --depth=1
 			git gc --prune=now
-		popd
+		popd || return
 	fi
 
-	pushd /opt/argentws-build/ > /dev/null 2>&1
+	pushd /opt/argentws-build/ > /dev/null 2>&1 || return
 		git pull --update-shallow
 		git pull --depth=1
 		git gc --prune=now
-	popd
+	popd || return
 
 }
 
@@ -279,7 +282,7 @@ backuppkg() {
 	# the unconventional way here: we import /etc/portage/make.conf into current local function
 	checkmakeconf
 
-	if [[ -z "$@" ]] ; then
+	if [[ $# -eq 0 ]] ; then
 		eerror "You have not specified any package to backup"
 		echo " "
 		exit 1
@@ -331,19 +334,23 @@ backupallpkg() {
 		eerror "Make sure you keep the backup safe!"
 		sleep 3
 		if [[ ! -e "/tmp/temporary_list_backup" ]] ; then
+			# shellcheck disable=SC2283
 			for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
 			quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
 		else
 			rm -f /tmp/temporary_list_backup
+			# shellcheck disable=SC2283
 			for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
 			quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
 		fi
 	else
 		if [[ ! -e "/tmp/temporary_list_backup" ]] ; then
+			# shellcheck disable=SC2283
 			for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
 			quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
 		else
 			rm -f /tmp/temporary_list_backup
+			# shellcheck disable=SC2283
 			for i in $( qlist -IvC ) ; do echo =$i >> /tmp/temporary_list_backup ; done
 			quickpkg --include-config y --include-unmodified-config y $( cat /tmp/temporary_list_backup ) "$@"
 		fi
@@ -522,6 +529,7 @@ recompile-depend-new() {
     flock -n 200 || { echo "Failed to acquire lock on $temp_list"; exit 1; }
 
     cat /dev/null > "$temp_list"
+    # shellcheck disable=SC2283
     for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> "$temp_list" ; done
 
     if [[ -s "$temp_list" ]] ; then
@@ -599,6 +607,7 @@ autorecompile-depend-new() {
     flock -n 200 || { echo "Failed to acquire lock on $temp_list"; exit 1; }
 
     cat /dev/null > "$temp_list"
+    # shellcheck disable=SC2283
     for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> "$temp_list" ; done
 
     if [[ -s "$temp_list" ]] ; then
@@ -621,11 +630,13 @@ reinstall-depend() {
 		eerror "If you continue, you continue at your own risk!"
 		sleep 3
 		cat /dev/null > /tmp/epkg_temporary_list
+		# shellcheck disable=SC2283
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		emerge -va $( cat /tmp/epkg_temporary_list )
 		rm -f /tmp/epkg_temporary_list || exit 1
 	else
 		cat /dev/null > /tmp/epkg_temporary_list
+		# shellcheck disable=SC2283
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		emerge -va $( cat /tmp/epkg_temporary_list )
 		rm -f /tmp/epkg_temporary_list || exit 1
@@ -640,11 +651,13 @@ autoreinstall-depend() {
 		eerror "If you continue, you continue at your own risk!"
 		sleep 3
 		cat /dev/null > /tmp/epkg_temporary_list
+		# shellcheck disable=SC2283
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		emerge -v $( cat /tmp/epkg_temporary_list )
 		rm -f /tmp/epkg_temporary_list || exit 1
 	else
 		cat /dev/null > /tmp/epkg_temporary_list
+		# shellcheck disable=SC2283
 		for i in $(equery d "$@" | awk '{print $1}') ; do echo =${i} >> /tmp/epkg_temporary_list ; done
 		emerge -v $( cat /tmp/epkg_temporary_list )
 		rm -f /tmp/epkg_temporary_list || exit 1
@@ -789,7 +802,7 @@ autobuildpkgonly() {
 syncportageconfig() {
 	# syncing with the latest updates on our argent gentoo configs
 
-	pushd /opt/argentws-build > /dev/null 2>&1
+	pushd /opt/argentws-build > /dev/null 2>&1 || return
 	echo ">>> Syncing 'portage config' into '/etc/portage' "
 	echo "Git pulling latest modifications. Please, stand by..."
 
@@ -806,7 +819,7 @@ syncportageconfig() {
 
 	echo "=== Sync completed for 'portage config'"
 
-	popd > /dev/null 2>&1
+	popd > /dev/null 2>&1 || return
 }
 
 argentsync() {
