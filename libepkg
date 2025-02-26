@@ -12,7 +12,7 @@ export ENABLE_COLOR="\e[1;49;34m"
 export DISABLE_COLOR="\e[0m"
 
 export PORTAGE_DIR="${PORTDIR}"
-export ARGENT_OVERLAY="/var/lib/layman/argent-ws"
+export ARGENT_OVERLAY="/var/db/repos/argent-ws"
 
 # import gentoo functions, this has not been ported to lib64 yet
 source /lib/gentoo/functions.sh
@@ -75,7 +75,7 @@ checkportagetree() {
 checkargentoverlay() {
 	# running update on argent gentoo overlay
 
-	pushd /var/lib/layman/argent-ws > /dev/null 2>&1 || return
+	pushd "${ARGENT_OVERLAY}" > /dev/null 2>&1 || return
 	git remote update > /dev/null 2>&1
 	export OVERLAYHASH=$(git rev-parse @)
 	export ROVERLAYHASH=$(git rev-parse @{u})
@@ -209,7 +209,7 @@ forcesync() {
 	git pull --unshallow
 	popd || return
 
-	pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1 || return
+	pushd "${ARGENT_OVERLAY}" > /dev/null 2>&1 || return
 	git pull --unshallow
 	popd || return
 
@@ -244,9 +244,9 @@ fetchminimalsync() {
 		popd || return
 	fi
 
-	if [[ ! -d "/var/lib/layman/argent-ws/.git" ]] ; then
+	if [[ ! -d ""${ARGENT_OVERLAY}"/.git" ]] ; then
 		einfo "Injecting usermode argent-ws overlay"
-		cd "/var/lib/layman/argent-ws/" && git init > /dev/null 2>&1
+		cd "${ARGENT_OVERLAY}" && git init > /dev/null 2>&1
 		git remote add origin https://gitlab.com/argent/argent-ws.git
 		git config core.sparsecheckout true
                 echo "profiles/*" >> .git/info/sparse-checkout
@@ -257,7 +257,7 @@ fetchminimalsync() {
                 git branch -u origin/master master
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
 	else
-		pushd /var/lib/layman/argent-ws/ > /dev/null 2>&1 || return
+		pushd "${ARGENT_OVERLAY}" > /dev/null 2>&1 || return
 			git pull --update-shallow
 			git pull --depth=1
 			git gc --prune=now
