@@ -78,17 +78,27 @@ case "$action" in
 		fi
 		;;
 	upgrade-full)
+		if [ "$1" != "--skip-check" ] ; then
+			checksync
+			emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
+		else
+			shift
+			emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
+		fi
+		;;
+	upgrade-specific)
+		if [ "$1" != "--skip-check" ] ; then
+			checksync
+			emerge -uDvaN "$@" --backtrack=150
+		else
+			shift
+			emerge -uDvaN "$@" --backtrack=150
+		fi
+		;;
+	upgrade-nocol)
 		checksync
-		emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
+		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
 		;;
-        upgrade-specific)
-                checksync
-                emerge -uDvaN "$@" --backtrack=150
-		;;
-        upgrade-nocol)
-                checksync
-                FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
-                ;;
 	autoinstall)
 		if [ "$1" == "--update" ] ; then
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
