@@ -10,12 +10,12 @@ shift
 
 case "$action" in
 	install)
-		if [ "$1" != "--skip-check" ] ; then
+		if [ "$1" == "--check" ] ; then
 			checksync
+			shift
 			emerge -av "${@}"
 		else
-			shift
-			emerge -av "$@"
+			emerge -av "${@}"
 		fi
 		;;
 	install-no-collision)
@@ -48,15 +48,19 @@ case "$action" in
 		PKGDIR="${PKGDIR:-}" backuppkg "$@"
 		;;
 	forceremove)
-		checksync
-		emerge --unmerge -av "$@"
+		if [ "$1" == "--check" ] ; then
+			checksync
+			emerge --unmerge -av "$@"
+		else
+			emerge --unmerge -av "$@"
+		fi
 		;;
 	clean)
-		if [ "$1" != "--skip-check" ] ; then
+		if [ "$1" == "--check" ] ; then
 			checksync
+			shift
 			emerge --depclean -av
 		else
-			shift
 			emerge --depclean -av
 		fi
 		;;
@@ -67,22 +71,22 @@ case "$action" in
 		cleanlocalpkg
 		;;
 	upgrade)
-		if [ "$1" != "--skip-check" ] ; then
+		if [ "$1" == "--check" ] ; then
 			checksync
+			shift
 			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 			emerge -uDvaN @system @world "$@"
 		else
-			shift
 			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 			emerge -uDvaN @system @world "$@"
 		fi
 		;;
 	upgrade-full)
-		if [ "$1" != "--skip-check" ] ; then
+		if [ "$1" == "--check" ] ; then
 			checksync
+			shift
 			emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
 		else
-			shift
 			emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
 		fi
 		;;
@@ -236,16 +240,26 @@ case "$action" in
 			fi
 		;;
 	autoupgrade)
-		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
-			fetchminimalsync
-		fi
-		emerge -uDvN @system @world "$@"
+		if [ "$1" == "--update" ] ; then
+			checksync
+			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+				fetchminimalsync
+			fi
+			shift
+			emerge -uDvN @system @world "$@"
+		else
+			emerge -uDvN @system @world "$@"
 		;;
 	autoupgrade-full)
-		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
-			fetchminimalsync
-		fi
-		emerge -uDvN --with-bdeps=y @system @world "$@"
+		if [ "$1" == "--update" ] ; then
+			checksync
+			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+				fetchminimalsync
+			fi
+			shift
+			emerge -uDvN --with-bdeps=y @system @world "$@"
+		else
+			emerge -uDvN --with-bdeps=y @system @world "$@"
 		;;
 	autoupgrade-nocol)
 		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
