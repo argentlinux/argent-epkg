@@ -156,9 +156,13 @@ case "$action" in
 		recompilepkg "$@"
 		;;
 	recompileallpkg)
-		argentsync
-		cleanoutdated
-		recompileallpkg
+		if [[ "${1}" == "--update" ]] ; then
+			argentsync
+			shift
+			recompileallpkg "$@"
+		else
+			recompileallpkg "$@"
+		fi
 		;;
 	recompile-depend)
 		recompile-depend "$@"
@@ -182,12 +186,22 @@ case "$action" in
 		autoreinstall-depend "$@"
 		;;
 	autorecompile)
-		argentsync
-		autorecompilepkg "$@"
+		if [[ "${1}" == "--update" ]] ; then
+			argentsync
+			shift
+			autorecompilepkg "$@"
+		else
+			autorecompilepkg "$@"
+		fi
 		;;
 	autorecompilepkg)
-		argentsync
-		autorecompilepkg "$@"
+		if [[ "${1}" == "--update" ]] ; then
+			argentsync
+			shift
+			autorecompilepkg "$@"
+		else
+			autorecompilepkg "$@"
+		fi
 		;;
 	autorecompile-depend)
 		autorecompile-depend "$@"

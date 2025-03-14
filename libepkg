@@ -623,7 +623,7 @@ autorecompile-depend-new() {
 
 # soon to be rewritten / deprecated
 reinstall-depend() {
-	# function to reinstall (?) all new packages that directly depend on this package
+	# function to reinstall all new packages that directly depend on this package
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
@@ -644,7 +644,7 @@ reinstall-depend() {
 }
 
 autoreinstall-depend() {
-	# function to recompile all new packages that directly depend on this package
+	# function to reinstall all new packages that directly depend on this package
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
