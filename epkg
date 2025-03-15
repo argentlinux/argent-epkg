@@ -224,10 +224,16 @@ case "$action" in
 		emerge --unmerge -v "$@"
 		;;
 	autoclean)
-		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
-			fetchminimalsync
+		if [ "$1" == "--update" ] ; then
+			checksync
+			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+				fetchminimalsync
+			fi
+			shift
+			emerge --depclean -q
+		else
+			emerge --depclean -q
 		fi
-		emerge --depclean -q
 		;;
 	autobuildpkgonly)
 			if [ "$1" != "--skip-update" ] ; then
@@ -249,6 +255,7 @@ case "$action" in
 			emerge -uDvN @system @world "$@"
 		else
 			emerge -uDvN @system @world "$@"
+		fi
 		;;
 	autoupgrade-full)
 		if [ "$1" == "--update" ] ; then
@@ -260,6 +267,7 @@ case "$action" in
 			emerge -uDvN --with-bdeps=y @system @world "$@"
 		else
 			emerge -uDvN --with-bdeps=y @system @world "$@"
+		fi
 		;;
 	autoupgrade-nocol)
 		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
