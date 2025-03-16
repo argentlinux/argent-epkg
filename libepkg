@@ -412,6 +412,19 @@ src-newuse() {
 	fi
 }
 
+compilepkg() {
+	# function to call a recompile of a package and save it to ${PKGDIR}"
+
+	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue at your own risk!"
+		sleep 3
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va "$@"
+	else
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -va "$@"
+	fi
+}
+
 recompilepkg() {
 	# function to call a recompile of a package and save it to ${PKGDIR}"
 
@@ -438,6 +451,19 @@ recompileallpkg() {
 		eerror "in --devmode: epkg remove <package-name>"
 		eerror "in --srcmode: emerge --unmerge <package-name>"
 		eerror "Then re-run the same command: epkg recompileallpkg"
+	fi
+}
+
+autocompilepkg() {
+	# function to call a recompile of a package and save it to ${PKGDIR}"
+
+	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
+		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
+		eerror "If you continue, you continue at your own risk!"
+		sleep 3
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v "$@"
+	else
+		EMERGE_DEFAULT_OPTS="--rebuilt-binaries" emerge -v "$@"
 	fi
 }
 

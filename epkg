@@ -13,9 +13,9 @@ case "$action" in
 		if [ "$1" == "--check" ] ; then
 			checksync
 			shift
-			emerge -av "${@}"
+			emerge -aq "${@}"
 		else
-			emerge -av "${@}"
+			emerge -aq "${@}"
 		fi
 		;;
 	install-no-collision)
@@ -109,9 +109,9 @@ case "$action" in
 				fetchminimalsync
 			fi
 			shift
-			emerge -v "$@"
+			emerge -q "$@"
 		else
-			emerge -v "$@"
+			emerge -q "$@"
 		fi
 		;;
 	autoinstall-no-collision)
@@ -153,6 +153,9 @@ case "$action" in
 	backupallpkg)
 		PKGDIR="${PKGDIR:-}" backupallpkg $( qlist -IvC ) "$@"
 		;;
+	compile)
+		compilepkg "$@"
+		;;
 	recompile)
 		recompilepkg "$@"
 		;;
@@ -188,6 +191,15 @@ case "$action" in
 		;;
 	autoreinstall-depend)
 		autoreinstall-depend "$@"
+		;;
+	autocompile)
+		if [[ "${1}" == "--update" ]] ; then
+			argentsync
+			shift
+			autocompilepkg "$@"
+		else
+			autocompilepkg "$@"
+		fi
 		;;
 	autorecompile)
 		if [[ "${1}" == "--update" ]] ; then
