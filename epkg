@@ -75,10 +75,10 @@ case "$action" in
 			checksync
 			shift
 			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
-			emerge -uDvaN @system @world "$@"
+			emerge -uDaN @system @world "$@"
 		else
 			PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
-			emerge -uDvaN @system @world "$@"
+			emerge -uDaN @system @world "$@"
 		fi
 		;;
 	upgrade-full)
@@ -264,9 +264,9 @@ case "$action" in
 				fetchminimalsync
 			fi
 			shift
-			emerge -uDvN @system @world "$@"
+			emerge -uDN @system @world "$@"
 		else
-			emerge -uDvN @system @world "$@"
+			emerge -uDN @system @world "$@"
 		fi
 		;;
 	autoupgrade-full)
