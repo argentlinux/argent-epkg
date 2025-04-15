@@ -1,3 +1,5 @@
+# Copyright Argent Developers 2015-2025
+# License: GPLv2
 #!/usr/bin/env bash
 
 source /usr/lib64/epkg/libepkg
@@ -156,6 +158,9 @@ case "$action" in
 	compile)
 		compilepkg "$@"
 		;;
+	compile-preserved)
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -aq
+		;;
 	recompile)
 		recompilepkg "$@"
 		;;
@@ -199,6 +204,17 @@ case "$action" in
 			autocompilepkg "$@"
 		else
 			autocompilepkg "$@"
+		fi
+		;;
+	autocompile-preserved)
+		if [ "$1" == "--update" ] ; then
+			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+				fetchminimalsync
+			fi
+			shift
+			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -q
+		else
+			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -q
 		fi
 		;;
 	autorecompile)
