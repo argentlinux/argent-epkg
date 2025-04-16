@@ -1,5 +1,3 @@
-# Copyright Argent Developers 2015-2025
-# License: GPLv2
 #!/usr/bin/env bash
 
 source /etc/portage/make.conf
