@@ -156,6 +156,9 @@ case "$action" in
 	compile)
 		compilepkg "$@"
 		;;
+	compile-preserved)
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -av
+		;;
 	recompile)
 		recompilepkg "$@"
 		;;
@@ -199,6 +202,18 @@ case "$action" in
 			autocompilepkg "$@"
 		else
 			autocompilepkg "$@"
+		fi
+		;;
+	autocompile-preserved)
+		if [ "$1" == "--update" ] ; then
+			checksync
+			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+				fetchminimalsync
+			fi
+			shift
+			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -v
+		else
+			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -v
 		fi
 		;;
 	autorecompile)
@@ -349,6 +364,7 @@ case "$action" in
 				upgrade-specific - Upgrade specific package(s)
 				install-no-collision - Install a package forcefully without collision protection
 				install-bin-pkg - Install only a precompiled binary package if available
+				compile-preserved - Recompile packages that are categorized as preserved-rebuilds
 
 				autoinstall - Install new packages (no confirmation)
 				autoinstall-no-collision - Install new package forcefully without collision protection ( no confirmation )
@@ -379,6 +395,7 @@ case "$action" in
 				autorecompile-depend - Compile/Recompile all currently installed packages that depend on given package(s) ( no confirmation )
 				autorecompile-depend-new - Compile/Recompile all newly-installed packages that depend on given package(s) ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
+				autocompile-preserved - Recompile packages that are categorized as preserved-rebuilds
 
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )
