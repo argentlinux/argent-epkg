@@ -24,7 +24,7 @@ case "$action" in
 		;;
 	install-bin-pkg)
 		checksync
-		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -av "$@"
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkgonly " emerge -av "$@"
 		;;
 	remove)
 		if [ "$1" != "--skip-check" ] ; then
@@ -131,9 +131,9 @@ case "$action" in
 				fetchminimalsync
 			fi
 			shift
-			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -v "$@"
+			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkgonly " emerge -v "$@"
 		else
-			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg " emerge -v "$@"
+			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkgonly " emerge -v "$@"
 		fi
 		;;
 	autoremove)
@@ -157,7 +157,7 @@ case "$action" in
 		compilepkg "$@"
 		;;
 	compile-preserved)
-		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -av
+		EMERGE_DEFAULT_OPTS=" --rebuilt-binaries" emerge @preserved-rebuild -av
 		;;
 	recompile)
 		recompilepkg "$@"
@@ -211,9 +211,9 @@ case "$action" in
 				fetchminimalsync
 			fi
 			shift
-			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -v
+			EMERGE_DEFAULT_OPTS=" --rebuilt-binaries" emerge @preserved-rebuild -v
 		else
-			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries" emerge @preserved-rebuild -v
+			EMERGE_DEFAULT_OPTS=" --rebuilt-binaries" emerge @preserved-rebuild -v
 		fi
 		;;
 	autorecompile)
