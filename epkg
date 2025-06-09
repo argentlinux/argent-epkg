@@ -153,6 +153,9 @@ case "$action" in
 	backupallpkg)
 		PKGDIR="${PKGDIR:-}" backupallpkg $( qlist -IvC ) "$@"
 		;;
+	module-rebuild)
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries " emerge -av1 @module-rebuild
+		;;
 	compile)
 		compilepkg "$@"
 		;;
@@ -194,6 +197,9 @@ case "$action" in
 		;;
 	autoreinstall-depend)
 		autoreinstall-depend "$@"
+		;;
+	automodule-rebuild)
+		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries " emerge -v1 @module-rebuild
 		;;
 	autocompile)
 		if [[ "${1}" == "--update" ]] ; then
@@ -373,6 +379,7 @@ case "$action" in
 				reinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
 				devsync - Upgrade all Portage overlay structure with needed ebuilds for development / compilation
+				module-rebuild - Rebuild all kernel modules that are currently installed
 
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
 				recompile - Recompile and install packages with self-defined options ( man portage )
@@ -396,6 +403,7 @@ case "$action" in
 				autorecompile-depend-new - Compile/Recompile all newly-installed packages that depend on given package(s) ( no confirmation )
 				autoforceremove - *Unsafely* remove packages (no confirmation)
 				autocompile-preserved - Recompile packages that are categorized as preserved-rebuilds
+				automodule-rebuild - Rebuild all kernel modules that are currently installed ( no confirmation )
 
 				autoclean - Remove packages that are no longer needed (no confirmation)
 				autobuildpkgonly - Build/Recompile package(s) and export them locally ( no confirmation )
