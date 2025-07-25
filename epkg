@@ -1,3 +1,6 @@
+# Copyright Argent Linux Authors 2015-2025
+# License: GPLv2
+
 #!/usr/bin/env bash
 
 source /usr/lib64/epkg/libepkg
