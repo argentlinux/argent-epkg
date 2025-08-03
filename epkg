@@ -12,24 +12,24 @@ action=$1
 shift
 
 case "$action" in
-	install)
-		if [ "$1" == "--check" ] ; then
-			checksync
-			shift
-			emerge -aq "${@}"
-		else
-			emerge -aq "${@}"
-		fi
-		;;
+    install|i)
+        if [ "$1" == "--check" ] ; then
+            checksync
+            shift
+            emerge -aq "${@}"
+        else
+            emerge -aq "${@}"
+        fi
+        ;;
 	install-no-collision)
 		checksync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -av "$@"
 		;;
-	install-bin-pkg)
+	install-bin-pkg|ibin)
 		checksync
 		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkgonly " emerge -av "$@"
 		;;
-	remove)
+	remove|r)
 		if [ "$1" != "--skip-check" ] ; then
 			checksync
 			emerge --depclean -av "$@"
@@ -38,7 +38,7 @@ case "$action" in
 			emerge --depclean -av "$@"
 		fi
 		;;
-	configure)
+	configure|cfg)
 		if [ "$1" != "--skip-check" ] ; then
 		checksync
 		emerge --config "$@"
@@ -58,7 +58,7 @@ case "$action" in
 			emerge --unmerge -av "$@"
 		fi
 		;;
-	clean)
+	clean|c)
 		if [ "$1" == "--check" ] ; then
 			checksync
 			shift
@@ -73,7 +73,7 @@ case "$action" in
 	cleanlocalpkg)
 		cleanlocalpkg
 		;;
-	upgrade)
+	upgrade|ug)
 		if [ "$1" == "--check" ] ; then
 			checksync
 			shift
@@ -84,7 +84,7 @@ case "$action" in
 			emerge -uDaN @system @world "$@"
 		fi
 		;;
-	upgrade-full)
+	upgrade-full|ugf)
 		if [ "$1" == "--check" ] ; then
 			checksync
 			shift
@@ -106,7 +106,7 @@ case "$action" in
 		checksync
 		FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -uDvaN --with-bdeps=y @system @world "$@" --backtrack=150
 		;;
-	autoinstall)
+	autoinstall|ai)
 		if [ "$1" == "--update" ] ; then
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
 				fetchminimalsync
@@ -128,7 +128,7 @@ case "$action" in
 			FEATURES="parallel-fetch -collision-protect -protect-owned candy compressdebug splitdebug" emerge -v "$@"
 		fi
 		;;
-	autoinstall-bin-pkg)
+	autoinstall-bin-pkg|aibin)
 		if [ "$1" == "--update" ] ; then
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
 				fetchminimalsync
@@ -139,7 +139,7 @@ case "$action" in
 			EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkgonly " emerge -v "$@"
 		fi
 		;;
-	autoremove)
+	autoremove|ar)
 		if [ "$1" == "--update" ] ; then
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
 				fetchminimalsync
@@ -165,7 +165,7 @@ case "$action" in
 	compile-preserved)
 		EMERGE_DEFAULT_OPTS=" --rebuilt-binaries" emerge @preserved-rebuild -av
 		;;
-	recompile)
+	recompile|re)
 		recompilepkg "$@"
 		;;
 	recompilepkg)
@@ -225,7 +225,7 @@ case "$action" in
 			EMERGE_DEFAULT_OPTS=" --rebuilt-binaries" emerge @preserved-rebuild -v
 		fi
 		;;
-	autorecompile)
+	autorecompile|are)
 		if [[ "${1}" == "--update" ]] ; then
 			argentsync
 			shift
@@ -259,7 +259,7 @@ case "$action" in
 		argentsync
 		emerge --unmerge -v "$@"
 		;;
-	autoclean)
+	autoclean|ac)
 		if [ "$1" == "--update" ] ; then
 			checksync
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
@@ -281,7 +281,7 @@ case "$action" in
 				autobuildpkgonly "$@"
 			fi
 		;;
-	autoupgrade)
+	autoupgrade|aug)
 		if [ "$1" == "--update" ] ; then
 			checksync
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
@@ -293,7 +293,7 @@ case "$action" in
 			emerge -uDN @system @world "$@"
 		fi
 		;;
-	autoupgrade-full)
+	autoupgrade-full|augf)
 		if [ "$1" == "--update" ] ; then
 			checksync
 			if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
@@ -323,10 +323,10 @@ case "$action" in
 	fetchbinpkg)
 		fetchbinpkg "$@"
 		;;
-	search)
+	search|s)
 		emerge -s "$@"
 		;;
-	update)
+	update|u)
 		PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
 		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
 			fetchminimalsync
@@ -346,7 +346,10 @@ case "$action" in
 	resume)
 		emerge --resume -v1
 		;;
-	oneshot)
+	oneshot|o)
+		emerge --oneshot -va1 "$@"
+		;;
+	autooneshot|ao)
 		emerge --oneshot -va1 "$@"
 		;;
 	*)
@@ -358,34 +361,34 @@ case "$action" in
 			Debian/RedHat-based systems to Gentoo. It is a fork of unmaintained github.com/jdhore/epkg.
 
 			Commands :
-				install - Install new packages
-				remove - Remove packages safely
-				configure - Configure packages as per ebuilds settings
+				install|i - Install new packages
+				remove|r - Remove packages safely
+				configure|cfg - Configure packages as per ebuilds settings
 				backuppkg - Backup specific packages with own configurations for later use
 				forceremove - *Unsafely* remove packages
-				clean - Remove packages that are no longer needed
+				clean|c - Remove packages that are no longer needed
 				cleanoutdated - Remove local saved and outdated packages
 				cleanlocalpkg - Remove all locally saved package ( including index ) usually in /usr/portage/packages
 
-				upgrade -  Upgrade system. No build dependencies are upgraded
-				upgrade-full - Upgrade system. All build dependencies included for upgrade
+				upgrade|ug -  Upgrade system. No build dependencies are upgraded
+				upgrade-full|ugf - Upgrade system. All build dependencies included for upgrade
 				upgrade-nocol - Upgrade system without collision protection
 				upgrade-specific - Upgrade specific package(s)
 				install-no-collision - Install a package forcefully without collision protection
-				install-bin-pkg - Install only a precompiled binary package if available
+				install-bin-pkg|ibin - Install only a precompiled binary package if available
 				compile-preserved - Recompile packages that are categorized as preserved-rebuilds
 
-				autoinstall - Install new packages (no confirmation)
+				autoinstall|ai - Install new packages (no confirmation)
 				autoinstall-no-collision - Install new package forcefully without collision protection ( no confirmation )
-				autoinstall-bin-pkg - Install only a precompiled binary package if available ( no confirmation )
-				autoremove - Remove packages safely (no confirmation)
+				autoinstall-bin-pkg|aibin - Install only a precompiled binary package if available ( no confirmation )
+				autoremove|ar - Remove packages safely (no confirmation)
 				reinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision
 				src-newuse - Check a specific package if it has to be reinstalled due to USE flag change ( portage-specific )
 				devsync - Upgrade all Portage overlay structure with needed ebuilds for development / compilation
 				module-rebuild - Rebuild all kernel modules that are currently installed
 
 				backupallpkg - Backup the whole system. Usually in /usr/portage/packages
-				recompile - Recompile and install packages with self-defined options ( man portage )
+				recompile|re - Recompile and install packages with self-defined options ( man portage )
 				recompilepkg - Recompile and install packages with self-defined options ( man portage )
 				recompileallpkg - Recompile, install and save all the packages locally ( usually in /usr/portage/packages/ )
 				recompile-depend - Compile/Recompile all currently installed packages that depend on given package(s)
@@ -393,13 +396,13 @@ case "$action" in
 				buildpkgonly - Build/Recompile package(s) and export them locally ( usually in /usr/portage/packages )
 				buildinstall - Recompile/Build package(s) and install them immediately ( usually in /usr/portage/packages )
 
-				autoupgrade - Upgrade system (no confirmation). No build dependencies are upgraded
-				autoupgrade-full - Upgrade system ( no confirmation ). All build dependencies included for upgrade
+				autoupgrade|ug - Upgrade system (no confirmation). No build dependencies are upgraded
+				autoupgrade-full|ugf - Upgrade system ( no confirmation ). All build dependencies included for upgrade
 				autoupgrade-nocol - Upgrade system without collision protection ( no confirmation )
 				autoupgrade-specific - Upgrade specific package(s) ( no confirmation )
 
 				autoreinstall-depend - Reinstall all dependencies of given package(s) based on current version/revision ( no confirmation )
-				autorecompile - Recompile packages with self-defined options ( no confirmation )
+				autorecompile|are - Recompile packages with self-defined options ( no confirmation )
 				autorecompilepkg - Recompile packages with self-defined options ( no confirmation )
 				autorecompileallpkg - Recompile and save all the packages in the system ( no confirmation )
 				autorecompile-depend - Compile/Recompile all currently installed packages that depend on given package(s) ( no confirmation )
@@ -419,7 +422,8 @@ case "$action" in
 				update - Resync portage tree, portage config && argent-ws overlay
 				sysinfo - Display information about installed core packages and portage configuration
 				resume - Resume the last failed emerge operation(s)
-				oneshot - Install package(s) as one-shot package(s)
+				oneshot|o - Install package(s) as one-shot package(s)
+				autooneshot|ao - Install package(s) as one-shot package(s) (no confirmation)
 		EOH
 		;;
 esac
