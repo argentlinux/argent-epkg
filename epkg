@@ -350,7 +350,7 @@ case "$action" in
 		emerge --oneshot -va1 "$@"
 		;;
 	autooneshot|ao)
-		emerge --oneshot -va1 "$@"
+		emerge --oneshot -v1 "$@"
 		;;
 	*)
 		cat <<-"EOH"
