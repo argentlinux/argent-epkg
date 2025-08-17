@@ -151,7 +151,7 @@ case "$action" in
 		fi
 		;;
 	reinstall-depend)
-		reinstall-depend "$@"
+		reinstall_depend "$@"
 		;;
 	backupallpkg)
 		PKGDIR="${PKGDIR:-}" backupallpkg $( qlist -IvC ) "$@"
@@ -181,13 +181,13 @@ case "$action" in
 		fi
 		;;
 	recompile-depend)
-		recompile-depend "$@"
+		recompile_depend "$@"
 		;;
 	recompile-depend-new)
-		recompile-depend-new "$@"
+		recompile_depend_new "$@"
 		;;
 	src-newuse)
-		src-newuse "$@"
+		src_newuse "$@"
 		;;
 	buildpkgonly)
 		buildpkgonly "$@"
@@ -199,7 +199,7 @@ case "$action" in
 		PKGDIR="${PKGDIR:-}" autobuildinstall "$@"
 		;;
 	autoreinstall-depend)
-		autoreinstall-depend "$@"
+		autoreinstall_depend "$@"
 		;;
 	automodule-rebuild)
 		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --rebuilt-binaries " emerge -v1 @module-rebuild
@@ -244,11 +244,11 @@ case "$action" in
 		fi
 		;;
 	autorecompile-depend)
-		autorecompile-depend "$@"
+		autorecompile_depend "$@"
 		;;
 	autorecompile-depend-new)
 		cleanoutdated
-		autorecompile-depend-new "$@"
+		autorecompile_depend_new "$@"
 		;;
 	autorecompileallpkg)
 		argentsync
@@ -315,7 +315,7 @@ case "$action" in
 		emerge -uDvN "$@"
 		;;
 	remove-orphans)
-		remove-orphans
+		remove_orphans
 		;;
 	fetchsourcepkg)
 		fetchsourcepkg "$@"

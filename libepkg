@@ -407,7 +407,7 @@ cleanlocalpkg() {
 	env-update && source /etc/profile
 }
 
-src-newuse() {
+src_newuse() {
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
 		eerror "You are on --usermode, we propose using: avasile --devmode or --srcmode for this"
 		eerror "If you continue, you continue at your own risk!"
@@ -497,7 +497,7 @@ autorecompileallpkg() {
 	fi
 }
 
-recompile-depend() {
+recompile_depend() {
     # function to recompile all the packages that directly depend on this package
 
     local exclude_packages=()
@@ -546,7 +546,7 @@ recompile-depend() {
     exec 200>&-
 }
 
-recompile-depend-new() {
+recompile_depend_new() {
     # function to recompile all the new packages that directly depend on this package
 
     if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -575,7 +575,7 @@ recompile-depend-new() {
     exec 200>&-
 }
 
-autorecompile-depend() {
+autorecompile_depend() {
     # function to recompile all the packages that directly depend on this package with no confirmation
 
     local exclude_packages=()
@@ -624,7 +624,7 @@ autorecompile-depend() {
     exec 200>&-
 }
 
-autorecompile-depend-new() {
+autorecompile_depend_new() {
     # function to recompile all the new packages that directly depend on this package with no confirmation
 
     if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -654,7 +654,7 @@ autorecompile-depend-new() {
 }
 
 # soon to be rewritten / deprecated
-reinstall-depend() {
+reinstall_depend() {
 	# function to reinstall all new packages that directly depend on this package
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -675,7 +675,7 @@ reinstall-depend() {
 	fi
 }
 
-autoreinstall-depend() {
+autoreinstall_depend() {
 	# function to reinstall all new packages that directly depend on this package
 
 	if [[ "$(readlink -f "/etc/portage/make.conf")" = "/opt/argentws-build/conf/intel/portage/make.conf.amd64-user" ]] ; then
@@ -738,7 +738,7 @@ fetchbinpkg() {
 	env-update && source /etc/profile
 }
 
-remove-orphans() {
+remove_orphans() {
 	# The function calls 'emerge --depclean -a' which removes orphaned packages
 	# Probably the most successful emerge algorythm ever made
 
