@@ -9,7 +9,9 @@ checkroot
 checksystemmode
 
 action=$1
-shift
+if [ $# -gt 0 ]; then
+    shift
+fi
 
 case "$action" in
     install|i)
