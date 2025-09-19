@@ -164,22 +164,25 @@ syncrepos() {
 }
 
 set_var_cache_dir() {
-	export COLOR_ON="\e[1;49;34m"
-	export COLOR_OFF="\e[0m"
+    export COLOR_ON="\e[1;49;34m"
+    export COLOR_OFF="\e[0m"
 
-	if [ -e "/etc/portage/make.conf" ] ; then
-		. /etc/portage/make.conf
-		unset PKGDIR
-		export PKGDIR="${PKGDIR:-$(cat /etc/portage/make.conf | grep 'PKGDIR=' | cut -d '"' -f2)}"
-		unset DISTDIR
-		export DISTDIR="${DISTDIR:-$(cat /etc/portage/make.conf | grep 'DISTDIR=' | cut -d '"' -f2)}"
-		unset PORTAGE_GROUP
-		export PORTAGE_GROUP="${PORTAGE_GROUP:-$(cat /etc/portage/make.conf | grep 'PORTAGE_GROUP=' | cut -d '"' -f2)}"
+    if [ -e "/etc/portage/make.conf" ] ; then
+        . /etc/portage/make.conf
+        if [ -z "${PKGDIR}" ]; then
+            export PKGDIR="$(cat /etc/portage/make.conf | grep 'PKGDIR=' | cut -d '"' -f2)"
+        fi
+        if [ -z "${DISTDIR}" ]; then
+            export DISTDIR="$(cat /etc/portage/make.conf | grep 'DISTDIR=' | cut -d '"' -f2)"
+        fi
+        if [ -z "${PORTAGE_GROUP}" ]; then
+            export PORTAGE_GROUP="$(cat /etc/portage/make.conf | grep 'PORTAGE_GROUP=' | cut -d '"' -f2)"
+        fi
         else
-		eerror "The file does not match the pattern of environment script"
-		echo "Please consider using avasile to change to one of the modes"
-		echo "avasile --help"
-	fi
+        eerror "The file does not match the pattern of environment script"
+        echo "Please consider using avasile to change to one of the modes"
+        echo "avasile --help"
+    fi
 
 	echo " "
 

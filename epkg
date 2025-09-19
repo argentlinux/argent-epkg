@@ -5,7 +5,10 @@
 
 source /usr/lib64/epkg/libepkg
 
-checkroot
+if [[ "$1" != "search" && "$1" != "s" ]]; then
+    checkroot
+fi
+
 checksystemmode
 
 action=$1
@@ -32,23 +35,23 @@ case "$action" in
 		EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkgonly " emerge -av "$@"
 		;;
 	remove|r)
-		if [ "$1" != "--skip-check" ] ; then
-			checksync
-			emerge --depclean -av "$@"
-		else
-			shift
-			emerge --depclean -av "$@"
-		fi
-		;;
-	configure|cfg)
-		if [ "$1" != "--skip-check" ] ; then
-		checksync
-		emerge --config "$@"
-		else
-		shift
-		emerge --config "$@"
-		fi
-		;;
+        if [ "$1" == "--check" ] ; then
+            checksync
+            shift
+            emerge --depclean -av "$@"
+        else
+            emerge --depclean -av "$@"
+        fi
+        ;;
+    configure|cfg)
+        if [ "$1" == "--check" ] ; then
+            checksync
+            shift
+            emerge --config "$@"
+        else
+            emerge --config "$@"
+        fi
+        ;;
 	backuppkg)
 		PKGDIR="${PKGDIR:-}" backuppkg "$@"
 		;;
@@ -96,13 +99,13 @@ case "$action" in
 		fi
 		;;
 	upgrade-specific)
-		if [ "$1" != "--skip-check" ] ; then
-			checksync
-			emerge -uDvaN "$@" --backtrack=150
-		else
-			shift
-			emerge -uDvaN "$@" --backtrack=150
-		fi
+		if [ "$1" == "--check" ] ; then
+            checksync
+            shift
+            emerge -uDvaN "$@" --backtrack=150
+        else
+            emerge -uDvaN "$@" --backtrack=150
+        fi
 		;;
 	upgrade-nocol)
 		checksync
@@ -192,7 +195,7 @@ case "$action" in
 		src_newuse "$@"
 		;;
 	buildpkgonly)
-		buildpkgonly "$@"
+		PKGDIR="${PKGDIR:-}" buildpkgonly "$@"
 		;;
 	buildinstall)
 		PKGDIR="${PKGDIR:-}" buildinstall "$@"
@@ -274,15 +277,15 @@ case "$action" in
 		fi
 		;;
 	autobuildpkgonly)
-			if [ "$1" != "--skip-update" ] ; then
-				argentsync
-				cleanoutdated
-				autobuildpkgonly "$@"
-			else
-				shift
-				autobuildpkgonly "$@"
-			fi
-		;;
+        if [ "$1" == "--update" ] ; then
+            argentsync
+            cleanoutdated
+            shift
+            PKGDIR="${PKGDIR:-}" autobuildpkgonly "$@"
+        else
+            PKGDIR="${PKGDIR:-}" autobuildpkgonly "$@"
+        fi
+        ;;
 	autoupgrade|aug)
 		if [ "$1" == "--update" ] ; then
 			checksync
