@@ -331,14 +331,24 @@ case "$action" in
 	search|s)
 		emerge -s "$@"
 		;;
-	update|u)
-		PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
-		if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
-			fetchminimalsync
-		else
-			emerge --sync
-		fi
-		;;
+    update|u)
+        PKGDIR="${PKGDIR:-}" DISTDIR="${DISTDIR:-}" set_var_cache_dir
+        if [ "$1" == "--clean" ] ; then
+            shift
+            if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+                fetchminimalsync
+                git_clean_history
+            else
+                emerge --sync
+            fi
+        else
+            if [[ "${EPKG_DISTRO_SET}" == "argent" ]]; then
+                fetchminimalsync
+            else
+                emerge --sync
+            fi
+        fi
+        ;;
 	devsync)
 		argentsync
 		;;

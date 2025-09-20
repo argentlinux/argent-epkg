@@ -234,7 +234,8 @@ fetchminimalsync() {
                 cd "${PORTAGE_DIR}" && git init > /dev/null 2>&1
                 git remote add origin https://gitlab.com/argent/portage.git
                 git config core.sparsecheckout true
-                echo "profiles/*" >> .git/info/sparse-checkout
+                git config core.sparseCheckoutCone false
+                echo "profiles/*" > .git/info/sparse-checkout
                 echo "metadata/*" >> .git/info/sparse-checkout
                 echo "eclass/*" >> .git/info/sparse-checkout
                 echo ".gitignore" >> .git/info/sparse-checkout
@@ -244,8 +245,9 @@ fetchminimalsync() {
         else
         # We need minimal git pull if the folder really exists
         pushd "${PORTAGE_DIR}" > /dev/null 2>&1 || return
-            git pull --update-shallow
-            git pull --depth=1
+            git fetch --depth=1 origin master
+            git reset --hard origin/master
+            git clean -fd
             git gc --prune=now
         popd || return
     fi
@@ -255,7 +257,8 @@ fetchminimalsync() {
         cd "${ARGENT_OVERLAY}" && git init > /dev/null 2>&1
         git remote add origin https://gitlab.com/argent/argent-ws.git
         git config core.sparsecheckout true
-                echo "profiles/*" >> .git/info/sparse-checkout
+        git config core.sparseCheckoutCone false
+                echo "profiles/*" > .git/info/sparse-checkout
                 echo "metadata/*" >> .git/info/sparse-checkout
                 echo "eclass/*" >> .git/info/sparse-checkout
                 echo ".gitignore" >> .git/info/sparse-checkout
@@ -265,21 +268,51 @@ fetchminimalsync() {
                 rm -rf ""${PORTAGE_DIR}"/profiles/updates"
     else
         pushd "${ARGENT_OVERLAY}" > /dev/null 2>&1 || return
-            git pull --update-shallow
-            git pull --depth=1
+            git fetch --depth=1 origin master
+            git reset --hard origin/master
+            git clean -fd
             git submodule update --init --recursive --depth=1
-            git submodule foreach --recursive git prune
+            git submodule foreach --recursive git clean -fd
             git gc --prune=now
         popd || return
     fi
 
     pushd /opt/argentws-build/ > /dev/null 2>&1 || return
-        git pull --update-shallow
-        git pull --depth=1
+        git fetch --depth=1 origin master
+        git reset --hard origin/master
+        git clean -fd
         git gc --prune=now
     popd || return
-
 }
+
+git_clean_history() {
+    # cleanup git history when called
+    if [[ -d "${PORTAGE_DIR}"/.git ]] ; then
+        pushd "${PORTAGE_DIR}" > /dev/null 2>&1 || return
+            git reflog expire --expire=now --all
+            git gc --prune=now --aggressive
+            git repack -ad
+        popd || return
+    fi
+
+    if [[ -d "${ARGENT_OVERLAY}"/.git ]] ; then
+        pushd "${ARGENT_OVERLAY}" > /dev/null 2>&1 || return
+            git reflog expire --expire=now --all
+            git gc --prune=now --aggressive
+            git repack -ad
+            git submodule foreach --recursive 'git reflog expire --expire=now --all && git gc --prune=now --aggressive'
+        popd || return
+    fi
+
+    if [[ -d "/opt/argentws-build"/.git ]] ; then
+        pushd /opt/argentws-build/ > /dev/null 2>&1 || return
+            git reflog expire --expire=now --all
+            git gc --prune=now --aggressive
+            git repack -ad
+        popd || return
+    fi
+}
+
 
 backuppkg() {
 	# function to provide backup packages with own configurations
